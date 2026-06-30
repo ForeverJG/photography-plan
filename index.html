@@ -1,0 +1,2178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>摄影策划集</title>
+<style>
+/* ============================================================
+   CSS 变量 —— 12 风格配色
+   ============================================================ */
+:root {
+  --bg: #fafaf9;
+  --text: #333;
+  --text-muted: #888;
+  --border: #e8e6e1;
+  --card-bg: #fff;
+  --accent: #8BA6B0;
+  --accent-light: #e8f0f3;
+  --tag-bg: #f0efea;
+  --sidebar-bg: #f5f4f0;
+  --sidebar-width: 240px;
+  --check-green: #6aaa7e;
+}
+
+/* 日系清新 A */
+[data-style="A"] { --accent: #8BA6B0; --accent-light: #e8f0f3; }
+/* 法式慵懒 B */
+[data-style="B"] { --accent: #B8956A; --accent-light: #f5efe6; }
+/* 中式古风 C */
+[data-style="C"] { --accent: #A8393A; --accent-light: #f8eded; }
+/* 胶片复古 D */
+[data-style="D"] { --accent: #C4825A; --accent-light: #faf0e8; }
+/* 都市冷感 E */
+[data-style="E"] { --accent: #6B7D8D; --accent-light: #eef1f4; }
+/* 情绪暗调 F */
+[data-style="F"] { --accent: #5A4A42; --accent-light: #ede9e6; }
+/* 多巴胺 G */
+[data-style="G"] { --accent: #E874A0; --accent-light: #fef0f5; }
+/* 森系少女 H */
+[data-style="H"] { --accent: #6B9B7A; --accent-light: #edf5ef; }
+/* 强闪光 I */
+[data-style="I"] { --accent: #3A3A5C; --accent-light: #ebebf2; }
+/* 美式街拍 J */
+[data-style="J"] { --accent: #C45A3C; --accent-light: #faf0eb; }
+/* 糖水片 K */
+[data-style="K"] { --accent: #D491B2; --accent-light: #fdf3f7; }
+/* 私房 O */
+[data-style="O"] { --accent: #9B7A8A; --accent-light: #f5f0f2; }
+
+/* ============================================================
+   全局
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 15px; scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  display: flex;
+  min-height: 100vh;
+}
+
+a { color: var(--accent); text-decoration: none; }
+
+/* ============================================================
+   侧边栏
+   ============================================================ */
+.sidebar {
+  position: fixed;
+  top: 0; left: 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+.sidebar.collapsed { transform: translateX(calc(var(--sidebar-width) * -1)); }
+
+.sidebar-header {
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.sidebar-header .logo { font-size: 1rem; font-weight: 700; letter-spacing: 0.04em; white-space: nowrap; }
+.sidebar-toggle {
+  display: none;
+  background: none; border: none;
+  font-size: 1.3rem; cursor: pointer;
+  color: var(--text-muted); padding: 4px 6px; border-radius: 4px;
+  line-height: 1;
+}
+.sidebar-toggle:hover { background: var(--border); }
+
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 0;
+}
+.sidebar-nav::-webkit-scrollbar { width: 4px; }
+.sidebar-nav::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.nav-section-title {
+  padding: 8px 18px 4px;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 18px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.15s;
+  border-left: 3px solid transparent;
+  color: var(--text);
+}
+.nav-item:hover { background: rgba(0,0,0,0.03); }
+.nav-item.active {
+  background: var(--accent-light);
+  border-left-color: var(--accent);
+  font-weight: 600;
+}
+.nav-item .style-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--accent);
+}
+.nav-item .style-label { font-size: 0.72rem; color: var(--text-muted); margin-left: auto; white-space: nowrap; }
+
+.nav-quick-index {
+  margin: 6px 12px;
+  padding: 8px 12px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  text-align: center;
+  font-weight: 600;
+  transition: opacity 0.15s;
+}
+.nav-quick-index:hover { opacity: 0.85; }
+
+/* ============================================================
+   主内容区
+   ============================================================ */
+.main {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  padding: 28px 32px 60px;
+  max-width: 820px;
+  transition: margin-left 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.main.expanded { margin-left: 0; }
+
+/* 浮动展开按钮 (侧栏收起时可见) */
+.float-toggle {
+  display: none;
+  position: fixed;
+  top: 12px; left: 12px;
+  z-index: 99;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  width: 36px; height: 36px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  align-items: center;
+  justify-content: center;
+}
+.sidebar.collapsed ~ .float-toggle { display: flex; }
+
+.style-header {
+  margin-bottom: 24px;
+  padding-bottom: 18px;
+  border-bottom: 2px solid var(--accent);
+}
+.style-header .style-code {
+  font-size: 0.8rem;
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+.style-header h1 { font-size: 1.8rem; margin: 4px 0 6px; }
+.style-header .style-subtitle {
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+
+/* ============================================================
+   卡片 & 模块
+   ============================================================ */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 22px;
+  margin-bottom: 18px;
+}
+.card h2 {
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card h2 .icon { font-size: 1.2rem; }
+
+/* 引用块 -- 模特文案 */
+.quote-block {
+  background: var(--accent-light);
+  border-left: 4px solid var(--accent);
+  padding: 16px 20px;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 18px;
+  font-size: 0.95rem;
+  line-height: 1.8;
+}
+.quote-block .quote-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* 表格 */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  margin: 6px 0;
+}
+th, td {
+  padding: 8px 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+th {
+  background: var(--accent-light);
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: var(--accent);
+  white-space: nowrap;
+}
+tr:hover td { background: #fafaf8; }
+
+/* 标签 */
+.tag {
+  display: inline-block;
+  padding: 3px 10px;
+  background: var(--tag-bg);
+  border-radius: 20px;
+  font-size: 0.78rem;
+  margin: 2px 4px 2px 0;
+}
+
+/* 编号列表 */
+.guide-list { list-style: none; padding: 0; }
+.guide-list li {
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--border);
+  counter-increment: guide-counter;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.guide-list li::before {
+  content: counter(guide-counter);
+  background: var(--accent);
+  color: #fff;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.guide-list li .guide-content { flex: 1; }
+.guide-list li .guide-angle {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* 话术卡片 */
+.script-card {
+  background: #fdfcf9;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-bottom: 10px;
+}
+.script-card .script-scene {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 4px;
+}
+
+/* ============================================================
+   检查清单
+   ============================================================ */
+.checklist-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 7px 0;
+  cursor: pointer;
+  user-select: none;
+  border-bottom: 1px dotted var(--border);
+}
+.checklist-item input[type="checkbox"] {
+  margin-top: 3px;
+  width: 18px; height: 18px;
+  accent-color: var(--check-green);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.checklist-item.checked .checklist-text {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+.checklist-text { flex: 1; font-size: 0.9rem; }
+
+/* ============================================================
+   快速索引弹窗
+   ============================================================ */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.35);
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+}
+.modal-overlay.show { display: flex; }
+.modal-box {
+  background: #fff;
+  border-radius: 14px;
+  width: 90%;
+  max-width: 540px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+}
+.modal-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.modal-header h3 { font-size: 1rem; }
+.modal-close {
+  background: none; border: none;
+  font-size: 1.4rem; cursor: pointer;
+  color: var(--text-muted);
+}
+.modal-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+}
+.modal-tab {
+  flex: 1;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-bottom: 2px solid transparent;
+  color: var(--text-muted);
+  transition: all 0.15s;
+}
+.modal-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.modal-tab-content { display: none; padding: 16px 20px; }
+.modal-tab-content.active { display: block; }
+
+.index-table { font-size: 0.83rem; }
+.index-table td { vertical-align: top; }
+.index-table .style-link {
+  color: var(--accent);
+  cursor: pointer;
+  font-weight: 600;
+}
+.index-table .style-link:hover { text-decoration: underline; }
+
+/* ============================================================
+   框架卡片（未完成风格）
+   ============================================================ */
+.framework-card {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+}
+.framework-card .coming-soon {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+.framework-card h2 { font-size: 1.3rem; margin-bottom: 6px; color: var(--text); }
+.framework-card p { font-size: 0.9rem; }
+
+/* ============================================================
+   响应式
+   ============================================================ */
+@media (max-width: 768px) {
+  .sidebar {
+    --sidebar-width: 220px;
+    transform: translateX(calc(var(--sidebar-width) * -1));
+  }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-toggle { display: block; }
+  .main { margin-left: 0; padding: 20px 16px 40px; }
+  .float-toggle { display: flex; }
+  .sidebar.open ~ .float-toggle { display: none; }
+  .style-header h1 { font-size: 1.4rem; }
+  .card { padding: 14px 16px; }
+  table { font-size: 0.78rem; }
+  th, td { padding: 6px 8px; }
+}
+
+@media (min-width: 769px) {
+  .sidebar-toggle { display: flex; }
+}
+</style>
+</head>
+<body data-style="A">
+
+<!-- ============================================================
+     侧边栏
+     ============================================================ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <span class="logo">📷 摄影策划集</span>
+    <button class="sidebar-toggle" id="sidebarCloseBtn" title="收起导航">☰</button>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-title">风格分类</div>
+    <div class="nav-item active" data-style="A"><span class="style-dot"></span>日系清新<span class="style-label">通透治愈</span></div>
+    <div class="nav-item" data-style="B"><span class="style-dot"></span>法式慵懒<span class="style-label">优雅随性</span></div>
+    <div class="nav-item" data-style="C"><span class="style-dot"></span>中式古风<span class="style-label">古典雅致</span></div>
+    <div class="nav-item" data-style="D"><span class="style-dot"></span>胶片复古<span class="style-label">怀旧故事</span></div>
+    <div class="nav-item" data-style="E"><span class="style-dot"></span>都市冷感<span class="style-label">极简高级</span></div>
+    <div class="nav-item" data-style="F"><span class="style-dot"></span>情绪暗调<span class="style-label">光影氛围</span></div>
+    <div class="nav-item" data-style="G"><span class="style-dot"></span>多巴胺/时尚<span class="style-label">明快活泼</span></div>
+    <div class="nav-item" data-style="H"><span class="style-dot"></span>森系少女<span class="style-label">梦幻灵动</span></div>
+    <div class="nav-item" data-style="I"><span class="style-dot"></span>强闪光压暗背景<span class="style-label">硬朗酷炫</span></div>
+    <div class="nav-item" data-style="J"><span class="style-dot"></span>美式街拍<span class="style-label">随性复古</span></div>
+    <div class="nav-item" data-style="K"><span class="style-dot"></span>大光圈糖水片<span class="style-label">甜美梦幻</span></div>
+    <div class="nav-item" data-style="O"><span class="style-dot"></span>私房/情绪人像<span class="style-label">亲密真实</span></div>
+    <button class="nav-quick-index" id="quickIndexBtn">🔍 快速索引</button>
+  </nav>
+</aside>
+
+<!-- 侧栏收起时的浮动展开按钮 -->
+<button class="float-toggle" id="floatToggle" title="展开导航">☰</button>
+
+<!-- ============================================================
+     快速索引弹窗
+     ============================================================ -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>🔍 快速索引</h3>
+      <button class="modal-close" id="modalClose">✕</button>
+    </div>
+    <div class="modal-tabs">
+      <div class="modal-tab active" data-tab="tab-scene">📍 按场景/地点</div>
+      <div class="modal-tab" data-tab="tab-mood">😊 按模特状态</div>
+      <div class="modal-tab" data-tab="tab-feel">💭 按想拍的感觉</div>
+    </div>
+    <div class="modal-tab-content active" id="tab-scene">
+      <table class="index-table">
+        <tr><td>公园/草坪/树林</td><td><span class="style-link" data-style="H">H森系</span> → <span class="style-link" data-style="A">A日系</span> → <span class="style-link" data-style="B">B法式</span> → <span class="style-link" data-style="K">K糖水片</span> → <span class="style-link" data-style="D">D胶片</span></td></tr>
+        <tr><td>城市街道（老城）</td><td><span class="style-link" data-style="D">D胶片</span> → <span class="style-link" data-style="J">J美式</span> → <span class="style-link" data-style="A">A日系</span></td></tr>
+        <tr><td>城市街道（新城/现代建筑）</td><td><span class="style-link" data-style="E">E都市冷感</span> → <span class="style-link" data-style="J">J美式</span> → <span class="style-link" data-style="A">A日系</span></td></tr>
+        <tr><td>咖啡馆/书店（室内）</td><td><span class="style-link" data-style="A">A日系</span> → <span class="style-link" data-style="B">B法式</span> → <span class="style-link" data-style="D">D胶片</span> → <span class="style-link" data-style="O">O私房</span></td></tr>
+        <tr><td>古建/园林</td><td><span class="style-link" data-style="C">C中式古风</span> → <span class="style-link" data-style="D">D胶片</span></td></tr>
+        <tr><td>天台/空旷场地</td><td><span class="style-link" data-style="F">F情绪暗调</span> → <span class="style-link" data-style="I">I强闪光</span> → <span class="style-link" data-style="E">E都市冷感</span></td></tr>
+        <tr><td>游乐园/彩色墙</td><td><span class="style-link" data-style="G">G多巴胺</span> → <span class="style-link" data-style="K">K糖水片</span> → <span class="style-link" data-style="A">A日系</span></td></tr>
+        <tr><td>民宿/卧室（私密空间）</td><td><span class="style-link" data-style="O">O私房</span> → <span class="style-link" data-style="A">A日系(居家版)</span> → <span class="style-link" data-style="F">F情绪暗调</span></td></tr>
+        <tr><td>花海/花丛</td><td><span class="style-link" data-style="K">K糖水片</span> → <span class="style-link" data-style="H">H森系</span> → <span class="style-link" data-style="A">A日系</span></td></tr>
+        <tr><td>夜市/夜间街道</td><td><span class="style-link" data-style="I">I强闪光</span> → <span class="style-link" data-style="D">D胶片(夜间版)</span></td></tr>
+      </table>
+    </div>
+    <div class="modal-tab-content" id="tab-mood">
+      <table class="index-table">
+        <tr><td>“不想化妆，想自然一点”</td><td><span class="style-link" data-style="A">A日系清新</span>、<span class="style-link" data-style="D">D胶片</span>、<span class="style-link" data-style="O">O私房(素颜版)</span></td></tr>
+        <tr><td>“精心打扮了，想好看”</td><td><span class="style-link" data-style="B">B法式慵懒</span>、<span class="style-link" data-style="E">E都市冷感</span>、<span class="style-link" data-style="J">J美式街拍</span></td></tr>
+        <tr><td>“心情好，想玩起来”</td><td><span class="style-link" data-style="G">G多巴胺</span>、<span class="style-link" data-style="K">K糖水片</span>、<span class="style-link" data-style="A">A日系(户外版)</span></td></tr>
+        <tr><td>“不想笑，想酷一点”</td><td><span class="style-link" data-style="F">F情绪暗调</span>、<span class="style-link" data-style="E">E都市冷感</span>、<span class="style-link" data-style="I">I强闪光</span></td></tr>
+        <tr><td>“想试试不一样的感觉”</td><td><span class="style-link" data-style="C">C中式古风</span>、<span class="style-link" data-style="H">H森系少女</span>、<span class="style-link" data-style="D">D胶片复古</span></td></tr>
+        <tr><td>“想放松、信任你、拍私密感”</td><td><span class="style-link" data-style="O">O私房/情绪人像</span></td></tr>
+      </table>
+    </div>
+    <div class="modal-tab-content" id="tab-feel">
+      <table class="index-table">
+        <tr><td>干净治愈的生活感</td><td><span class="style-link" data-style="A">→ A. 日系清新</span></td></tr>
+        <tr><td>优雅浪漫的度假感</td><td><span class="style-link" data-style="B">→ B. 法式慵懒</span></td></tr>
+        <tr><td>古典意境的东方美</td><td><span class="style-link" data-style="C">→ C. 中式古风</span></td></tr>
+        <tr><td>怀旧故事的年代感</td><td><span class="style-link" data-style="D">→ D. 胶片复古</span></td></tr>
+        <tr><td>高级简约的现代感</td><td><span class="style-link" data-style="E">→ E. 都市冷感</span></td></tr>
+        <tr><td>情绪张力的氛围感</td><td><span class="style-link" data-style="F">→ F. 情绪暗调</span></td></tr>
+        <tr><td>活泼明亮的少女感</td><td><span class="style-link" data-style="G">→ G. 多巴胺/时尚</span></td></tr>
+        <tr><td>梦幻灵动的仙气感</td><td><span class="style-link" data-style="H">→ H. 森系少女</span></td></tr>
+        <tr><td>硬朗酷炫的戏剧感</td><td><span class="style-link" data-style="I">→ I. 强闪光压暗背景</span></td></tr>
+        <tr><td>随性复古的潮流感</td><td><span class="style-link" data-style="J">→ J. 美式街拍</span></td></tr>
+        <tr><td>甜美虚化的梦幻感</td><td><span class="style-link" data-style="K">→ K. 大光圈糖水片</span></td></tr>
+        <tr><td>亲密真实的脆弱感</td><td><span class="style-link" data-style="O">→ O. 私房/情绪人像</span></td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     主内容区
+     ============================================================ -->
+<main class="main" id="mainContent"></main>
+
+<script>
+/* ============================================================
+   数据 —— 所有风格内容
+   ============================================================ */
+const STYLES = {};
+
+/* ---------- A. 日系清新 ---------- */
+STYLES['A'] = {
+  code: 'A', name: '日系清新', subtitle: '通透治愈的生活感',
+  copy: '“想拍一组像夏天冰柠檬水一样的照片——干干净净的，有阳光透过百叶窗洒在脸上的温度，有风吹起发梢的瞬间。你不用刻意摆表情，就像周末在家赖床、在街角等咖啡那样随意。这组照片记录的就是你最舒服、最像自己的样子。”',
+  preset: [
+    ['白平衡', '手动设 <b>5200K</b>（晴天）/ <b>5500K</b>（阴天）', '不用AWB，避免色温飘忽不定'],
+    ['白平衡偏移', '<b>B2, G1</b>', '去黄气，肤色清透'],
+    ['照片风格', '<b>人像</b>', '肤色平滑，适合拍女生'],
+    ['— 强度 / 精细度 / 临界值', '<b>默认</b>', '保持出厂值'],
+    ['— 反差', '<b>-2</b>', '明暗过渡柔和'],
+    ['— 饱和度', '<b>-1</b>', '色彩清淡素雅'],
+    ['— 色调', '<b>-1</b>', '肤色偏一点点粉'],
+  ],
+  presetNote: '白平衡偏移说明：A=琥珀色，B=蓝色，M=洋红色，G=绿色。坐标中第一个字母代表水平方向（A/B），第二个字母代表垂直方向（M/G）。',
+  summary: [
+    ['核心关键词', '通透、治愈、生活感、干净、低对比'],
+    ['难度系数', '★★☆（对光线要求高，对摆姿要求低）'],
+    ['拍摄时长', '约1.5-2小时'],
+    ['最佳天气', '晴天的上午或下午（避开正午12:00-14:00硬光）'],
+    ['最佳时间', '上午9:00-11:00 / 下午15:00-17:00'],
+    ['推荐地点（成都）', '兴隆湖公园、玉林路、大学路'],
+    ['最佳季节/气候补充', '春秋最佳，夏季早晚段也可；最怯正午硬光和全阴天'],
+  ],
+  scenes: {
+    outdoor: { title: '户外（适合太阳不大时）', items: [
+      ['公园草坪', '兴隆湖公园、桂溪生态公园', '上午9-11点', '柔和的顺光/侧光，开阔不压暗'],
+      ['干净街道', '玉林路、大学路（梧桐树+小店）', '下午15-17点', '树影斑驳的漫射光，有生活气息'],
+      ['校园操场', '四川大学望江校区', '上午10点前', '开阔无遮挡，光线均匀'],
+    ]},
+    indoor: { title: '室内（适合太阳大时）', items: [
+      ['日式咖啡馆', '一介·巷子里（玉林）、MONDOLI（太古里旁）', '上午10-12点', '大落地窗透进的自然柔光'],
+      ['书店', '新山书屋（东郊记忆）、方所（太古里）', '全天', '暖黄室内光 + 窗光混合，氛围安静'],
+      ['白色系民宿', 'Airbnb搜“日系”“极简”“采光好”', '全天', '大面积漫射光，光线均匀无硬阴影'],
+    ]}
+  },
+  outfit: [
+    ['上衣', '宽松白衬衫 / 米色针织开衫 / 纯色T恤', '白、米白、浅蓝、浅灰'],
+    ['下装', '棉麻半身裙 / 浅色直筒牛仔裤', '卡其、浅蓝、米色'],
+    ['鞋子', '帆布鞋 / 小白鞋 / 平底凉鞋', '白色、浅色、帆布材质'],
+    ['配饰', '帆布包、小草帽、细框眼镜（无镜片）', '自然材质，不花哨'],
+  ],
+  outfitNote: '全身颜色不超过3种，以白/米/浅蓝/浅灰为主，避免深色（黑/深棕）和荧光色。材质选棉、麻、帆布等天然质感。',
+  props: [
+    ['透明玻璃杯（装水或柠檬片）', '手持、挡脸、透光拍', '家里有'],
+    ['书本/杂志（封面干净）', '翻书动作、挡脸、安静感', '随便一本，封面别太花'],
+    ['有线耳机（白色最佳）', '听歌状态、不看镜头的理由', '自己的或借'],
+    ['野餐布（白色/浅格子）', '坐草地上用，隔离潮湿', '网购¥20-30'],
+    ['西瓜/橘子/面包', '吃的动作、色彩点缀、互动', '现场买，颜色要鲜亮'],
+  ],
+  camSettings: [
+    ['拍摄模式', '<b>A档（光圈优先）</b>', '只管光圈，相机自动配快门'],
+    ['光圈', '<b>f/1.8 - f/2.8</b>', '背景虚化开最大（f/1.8），想环境清楚点收一档（f/2.8）'],
+    ['快门', '自动匹配，确保 ≥ <b>1/200s</b>', '低于1/200s可能拍糊，快门不够就提高ISO'],
+    ['ISO', '先设 <b>100</b>，暗了再往上加至400-800', 'ISO越低画质越干净'],
+    ['白平衡', '手动设 <b>5200K</b>（晴天）/ <b>5500K</b>（阴天）', '见速查卡'],
+    ['白平衡偏移', '<b>B2, G1</b>', '见速查卡'],
+    ['照片风格', '<b>人像</b>', '见速查卡'],
+    ['曝光补偿', '<b>+0.3 至 +0.7 EV</b>', '轻微过曝 = 日系通透感的核心'],
+  ],
+  camTip: '拍完一张看直方图：日系清新的直方图应该整体偏右（偏亮），但右侧不撞墙（不过曝死白）。',
+  poses: {
+    outdoor: { title: '户外版（公园/街道）', items: [
+      ['“你往前走，走到前面那棵树旁边停下来，我叫你的时候回头看我一下就行”', '蹲下平拍（35mm），拍到全身或半身'],
+      ['“靠着这个墙/栏杆/树干，看那边，想事情，不用看我”', '侧拍（50mm），拍到侧脸轮廓'],
+      ['“坐到草地上，把西瓜/橘子拿在手里，低头剥/切一下”', '俯拍（35mm）或从侧面平拍（50mm）'],
+      ['“站起来，仰头闭眼睛，晒太阳”', '从低角度仰拍（35mm），以天空为背景'],
+      ['“拿着杯子喝一口，喝完看地面，自然站一会儿”', '平拍（50mm），抓喝水动作'],
+      ['“你正常走路就行，我在后面跟着拍，不用管我”', '跟拍（35mm），连拍抓走路姿态'],
+    ]},
+    indoor: { title: '室内版（咖啡馆/居家）', items: [
+      ['“坐窗边，低头翻书，翻到哪页停一下，不用管我”', '从侧面平拍（50mm），窗光打侧脸'],
+      ['“端着杯子，看窗外发个呆，不要想POSE的事”', '平拍（50mm），半身'],
+      ['“耳机戴上，听歌，闭眼睛”', '正面平拍（50mm），特写半身'],
+      ['“趴在桌子上，脸枕着手臂，侧过来看我一下”', '平拍（35mm），桌面以上'],
+      ['“站在窗户旁边，让光照在脸上，闭眼安静一会儿”', '正面平拍（50mm），脸部特写'],
+      ['“拿书挡一下脸，只露一只眼睛”', '正面平拍（50mm），挡脸增加趣味'],
+    ]}
+  },
+  scripts: [
+    ['公园', '“你好，我在练习拍‘生活感’的照片，刚才那个光影落在你身上特别好看，可以帮你拍两张吗？拍完我发给你。”'],
+    ['街道', '“你好打扰了，我在拍一组街角日常的照片，你的穿搭很舒服很自然，愿意让我拍几张吗？就在这附近。”'],
+    ['咖啡馆', '“不好意思打扰一下，我坐那边在练摄影，你坐窗边的光特别好看，可以帮你拍一张吗？”'],
+  ],
+  scriptTip: '话术公式：夸具体（不是“你好看”，而是“那个光在你身上”/“你穿搭很舒服”）+ 说目的（我在练摄影/拍街角日常）+ 给回报（拍完发你）+ 不强求（“不方便也没关系”）。进阶技巧：拍完一张后给对方看一眼屏幕，说“好看！”，对方会更放松、更配合。',
+  post: [
+    ['总体方向', '高明度、低对比、偏青蓝，干净清透'],
+    ['色温', '偏冷一丢丢（往蓝调走，-5 至 -10）'],
+    ['曝光', '<b>+0.3 至 +0.7</b>'],
+    ['对比度', '<b>-10 至 -20</b>'],
+    ['自然饱和度', '<b>+5 至 +10</b>（肤色更鲜活）'],
+    ['饱和度', '<b>0 或 -5</b>（不猛加）'],
+    ['色调（高光）', '加一点点青/蓝'],
+    ['清晰度', '<b>-5 至 -10</b>（柔化皮肤）'],
+  ],
+  postApp: 'VSCO 滤镜 <b>A6</b>（日系冷调）或 <b>E6</b>（干净胶片感），然后曝光+1，对比度−1，色温−1。',
+  checklist: [
+    '相机 + 电池（充满，备电也带上） + SD卡（清空且有备用）',
+    '镜头（推荐35mm或50mm定焦 或 变焦24-70mm）',
+    '机内预设：白平衡偏移B2,G1 和 照片风格“人像”已设好',
+    '道具：透明杯子、书本、耳机、野餐布（如需）',
+    '给模特准备一瓶水（拉近距离，她也会更放松）',
+    '反光板（如有，非必需，但有它能补眼神光）',
+    '查看天气 + 确认拍摄地点是否营业/需门票/允许拍摄',
+    '提前一天把“给模特的文案”发给她，让她心里有数',
+    '自己穿方便蹲下、跑动、趴地上的衣服鞋子',
+    '带纸巾/湿巾（模特可能出汗、吃东西擦嘴、或草地潮湿）',
+    '带小镜子（给模特确认发型用）',
+  ]
+};
+
+/* ---------- B. 法式慵懒 ---------- */
+STYLES['B'] = {
+  code: 'B', name: '法式慵懒', subtitle: '优雅随性的浪漫感',
+  copy: '“想拍一组像巴黎午后散步一样的照片——慵懒随意，有梧桐树影落在肩膀上的温柔，有咖啡杯沿留下唇印的瞬间。你不用刻意摆姿势，就像周末在街角咖啡馆发呆、在老城小巷闲逛那样自然。这组照片记录的就是你最放松、最有女人味的样子。”',
+  preset: [
+    ['白平衡', '手动设 <b>5600K</b>（晴天）/ <b>5800K</b>（阴天）', '偏暖调，模拟法式阳光的温度'],
+    ['白平衡偏移', '<b>A2, M1</b>', '偏琥珀+洋红，营造复古暖调肤色'],
+    ['照片风格', '<b>人像</b>', '肤色柔和，保留暖调'],
+    ['— 强度 / 精细度 / 临界值', '<b>默认</b>', '保持出厂值'],
+    ['— 反差', '<b>-2</b>', '明暗过渡更柔，法式光感的关键'],
+    ['— 饱和度', '<b>-1</b>', '色彩低饱，更显高级'],
+    ['— 色调', '<b>0</b>', '保持自然肤色，不偏粉不偏黄'],
+  ],
+  presetNote: '白平衡偏移说明：A=琥珀色，B=蓝色，M=洋红色，G=绿色。A2,M1 = 往暖调+洋红方向各偏移1-2格，肤色温润不黄。',
+  summary: [
+    ['核心关键词', '优雅、随性、浪漫、慵懒、柔光'],
+    ['难度系数', '★★☆（对光线和配饰要求中等）'],
+    ['拍摄时长', '约1.5-2小时'],
+    ['最佳天气', '晴转多云 / 薄云遮日（柔光最佳）；阴天也可，更有情绪'],
+    ['最佳时间', '下午14:00-17:00（午后斜阳，光线温柔有方向感）'],
+    ['推荐地点（成都）', '镋钯街、太古里周边小巷、望平街、锦江宾馆附近梧桐道'],
+    ['最佳季节/气候补充', '春秋最佳（梧桐新绿或落叶）；夏季午后也可，注意防晒；法式风格在薄云天气下表现最好，硬光太大反而破坏柔和感'],
+  ],
+  scenes: {
+    outdoor: { title: '户外（梧桐街、花园、小巷）', items: [
+      ['梧桐街道', '镋钯街、大学路、望平街', '下午14-17点', '树影斑驳，透过树叶的漫射光柔和且有层次'],
+      ['法式花园', '麓湖CPI、锦城湖公园', '下午15-17点', '花园景观+柔光，有法式电影感'],
+      ['老城小巷', '宽窄巷子周边小街（避开人流）', '上午10-12点', '老墙、青砖、木门等复古元素'],
+    ]},
+    indoor: { title: '室内（咖啡馆、面包房、民宿）', items: [
+      ['法式咖啡馆', 'Café de Coucou（镋钯街）、Gout & Co（太古里旁）', '上午10-12点或下午2-4点', '法式装潢+大窗光，很出片'],
+      ['面包房/甜品店', '巴黎贝甜（太古里）、烂李子（东郊记忆）', '上午或午后', '法棍/可颂作为道具，画面有生活气息'],
+      ['复古民宿', 'Airbnb搜“法式”“复古”“拱形窗”', '全天', '拱形窗+白纱帘+木地板，光线充足'],
+    ]}
+  },
+  outfit: [
+    ['上衣', '法式裹身裙 / 条纹衫 / 丝质吊带裙 / 白衬衫', '奶油、卡其、深蓝、勃艮第红'],
+    ['下装', '高腰直筒牛仔裤 / A字裙', '深蓝、卡其、白色'],
+    ['鞋子', '玛丽珍鞋 / 芭蕾平底鞋 / 细带凉鞋', '浅色、皮革、复古感'],
+    ['配饰', '贝雷帽、丝巾、珍珠耳环、藤编包', '优雅不夸张，金属/珍珠光泽'],
+  ],
+  outfitNote: '全身2-3色，奶油/卡其/深蓝/勃艮第红为主，避免荧光色和大面积黑色。材质选丝、棉麻、羊绒等柔软质感。法式穿搭的核心是“像没用力气一样”的随意感，不要太精致。',
+  props: [
+    ['咖啡杯（外带杯也行，浅色系）', '手持、放桌上、喝的动作', '咖啡馆直接用店里的'],
+    ['法棍面包/可颂', '手持、放在桌上、撕开的动作', '面包店现买，¥15-30'],
+    ['一本旧书/法文杂志', '翻书、挡脸、放在膝上', '随便一本封面复古的'],
+    ['一把小阳伞（蕾丝边或纯色）', '撑伞、转伞、遮阳', '网购¥40-80，非必需但很出片'],
+    ['单车（复古款更好）', '推车、靠在车边', '共享单车即可'],
+    ['贝雷帽', '戴着、摘下来、拿在手里', '模特自己带或网购¥30-50'],
+  ],
+  camSettings: [
+    ['拍摄模式', '<b>A档（光圈优先）</b>', '只管光圈，相机自动配快门'],
+    ['光圈', '<b>f/1.8 - f/2.8</b>', '背景虚化开最大，环境清楚点收到f/2.8-f/4'],
+    ['快门', '自动匹配，确保 ≥ <b>1/200s</b>', '低于1/200s可能拍糊'],
+    ['ISO', '先设 <b>100</b>，暗了再往上加至400-800', 'ISO越低画质越干净'],
+    ['白平衡', '手动设 <b>5600K</b>（晴天）/ <b>5800K</b>（阴天）', '见速查卡'],
+    ['白平衡偏移', '<b>A2, M1</b>', '见速查卡，温暖复古肤色'],
+    ['照片风格', '<b>人像</b>', '见速查卡'],
+    ['曝光补偿', '<b>+0.3 至 +0.7 EV</b>', '轻微过曝营造柔光感，根据现场光线微调'],
+  ],
+  camTip: '法式慵懒的直方图也应该偏右，但高光区可以稍微过曝一点点（不撞墙即可）。暖调+过曝 = 法式柔光感。',
+  poses: {
+    outdoor: { title: '户外版（梧桐街/花园/小巷）', items: [
+      ['“你慢慢往前走，走到前面那个路灯旁边，回头看我的时候自然拨一下头发”', '蹲下平拍（35mm），全身或半身，抓回头瞬间'],
+      ['“靠着墙/树，一只手拿着咖啡杯，看街对面，像在等人”', '侧拍（50mm），侧脸轮廓+手中咖啡杯'],
+      ['“坐到路边的台阶上，把包放旁边，低头翻一下手机”', '平拍，低角度也可，日常随意感'],
+      ['“站在梧桐树下，仰头看树叶间的光，闭眼感受”', '从低角度仰拍（35mm），以树冠和天空为背景'],
+      ['“推着单车慢慢走，不用管我，我在后面拍”', '跟拍（35mm），连拍抓推车姿态'],
+      ['“靠在桥栏杆上，让风吹起头发，看河对岸”', '侧拍或背影，抓风吹头发的动感'],
+    ]},
+    indoor: { title: '室内版（咖啡馆/面包店/民宿）', items: [
+      ['“坐窗边，双手捧着咖啡杯，看窗外发个呆”', '侧面平拍（50mm），窗光打侧脸轮廓'],
+      ['“用叉子切一小块可颂，吃之前停一下，看食物”', '俯拍（桌面角度），抓“对食物的温柔”'],
+      ['“一只手托腮，手肘撑在桌上，手指自然垂在脸颊旁”', '正面平拍（50mm），半身特写'],
+      ['“站在窗前，侧身，阳光打轮廓光，闭眼”', '侧拍（50mm），拍轮廓光+剪影效果'],
+      ['“翻杂志，翻到哪页停一下，嘴角带一点笑意”', '侧拍或正面平拍，抓翻页瞬间'],
+      ['“把贝雷帽摘下来，整理一下，再戴上”', '正面平拍（50mm），抓戴帽子的动作'],
+    ]}
+  },
+  scripts: [
+    ['梧桐街/花园', '“你好，我在练习拍法式风格的照片，你的穿搭很有巴黎街头的味道，光线也很美，可以帮你拍两张吗？拍完发给你。”'],
+    ['咖啡馆', '“不好意思打扰了，我在这边练摄影，你坐窗边的剪影特别好看，愿意让我拍一张吗？”'],
+    ['花园/公园', '“你好打扰了，我在练习拍‘法式慵懒’风格的人像，你的气质和这个场景特别搭，可以帮你拍几张吗？”'],
+  ],
+  scriptTip: '话术公式：夸具体（“穿搭很有巴黎街头的味道”“气质和场景特别搭”）+ 说目的（练习拍法式风格）+ 给回报（拍完发你）。法式风格的被拍对象往往本身就有一定穿搭品味，夸“穿搭”比夸“好看”更能打动她们。',
+  post: [
+    ['总体方向', '暖调、柔光、低饱和、法式电影感'],
+    ['色温', '<b>+5 至 +10</b>（偏暖）'],
+    ['曝光', '<b>+0.3 至 +0.7</b>'],
+    ['对比度', '<b>-15 至 -25</b>'],
+    ['自然饱和度', '<b>-5 至 0</b>'],
+    ['饱和度', '<b>-5 至 -10</b>'],
+    ['高光', '加暖黄'],
+    ['阴影', '加一点点绿（胶片感）'],
+    ['清晰度', '<b>-10 至 -15</b>'],
+  ],
+  postApp: 'VSCO 滤镜 <b>A4</b>（暖调经典）或 <b>M5</b>（复古柔光），曝光+0.5，对比度−1，色温+1。Lightroom搜“French Vintage”或“Warm Film”预设。',
+  checklist: [
+    '相机 + 电池（充满，备电也带上） + SD卡（清空且有备用）',
+    '镜头（推荐35mm或50mm定焦 或 变焦24-70mm）',
+    '机内预设：白平衡偏移A2,M1 和 照片风格“人像”已设好',
+    '道具：咖啡杯、法棍/可颂、书本、贝雷帽',
+    '给模特准备一瓶水',
+    '反光板（如有，法式柔光需要补面光）',
+    '查看天气 + 确认拍摄地点营业时间/人流量',
+    '提前一天发“给模特的文案”',
+    '自己穿方便蹲下、跑动的衣服鞋子',
+    '带纸巾/湿巾',
+    '如用单车，提前确认附近有共享单车停放点',
+  ]
+};
+
+/* ---------- C. 中式古风 ---------- */
+STYLES['C'] = {
+  code: 'C', name: '中式古风', subtitle: '古典雅致的东方美',
+  copy: '“想拍一组像水墨画里走出来一样的照片——有竹影落在肩上的清冷，有回廊深处衣角轻摆的含蓄。你不用刻意摆表情，就像在园林里走走停停、在古建筑前安静站一会儿那样自然。这组照片记录的是你身上那股安静但有力量的气质。”',
+  preset: [
+    ['白平衡', '手动设 <b>5200K</b>（晴天）/ <b>5500K</b>（阴天）', '保持色彩还原准确，不偏不倚'],
+    ['白平衡偏移', '<b>B1, G1</b>', '轻微偏青绿，中式水墨感'],
+    ['照片风格', '<b>人像</b>', '肤色干净，适合汉服/旗袍'],
+    ['— 强度 / 精细度 / 临界值', '<b>默认</b>', '保持出厂值'],
+    ['— 反差', '<b>-1</b>', '降低反差让画面柔和，符合东方审美'],
+    ['— 饱和度', '<b>-1</b>', '淡雅素净，不浓不艳'],
+    ['— 色调', '<b>0</b>', '保持自然肤色'],
+  ],
+  presetNote: '中式风格追求“淡而不灰”——反差和饱和度各减一档即可，不要拉太低否则画面发灰。',
+  summary: [
+    ['核心关键词', '古典、雅致、含蓄、东方美、水墨感、留白'],
+    ['难度系数', '★★★（对场景和服装要求高，对摆姿要求中等）'],
+    ['拍摄时长', '约2-2.5小时（换装时间另计）'],
+    ['最佳天气', '晴天薄云 / 阴天（硬光不适合古风，柔和光最佳）'],
+    ['最佳时间', '上午9:00-11:00 / 下午15:00-17:00'],
+    ['推荐地点（成都）', '杜甫草堂、望江楼公园、武侯祠、文殊院、青羊宫'],
+    ['最佳季节/气候补充', '春秋最佳（春有花、秋有落叶）；夏季清晨也可但注意防蚊；有薄雾的早晨最出意境；雨天在回廊下拍也有独特韵味'],
+  ],
+  scenes: {
+    outdoor: { title: '户外（园林、古建、竹林）', items: [
+      ['古典园林', '杜甫草堂（茅屋+竹林+红墙）、望江楼公园（竹林+江景）', '上午9-11点', '竹林间透过的柔光，光影层次丰富'],
+      ['古建筑群', '武侯祠（红墙夹道+古柏）、文殊院（红墙+银杏）', '下午15-17点', '红墙光影是中式标志性背景'],
+      ['竹林/竹径', '望江楼公园竹林区、杜甫草堂竹林', '上午9-11点', '竹叶筛过的光斑，氛围感极强'],
+      ['庭院/回廊', '青羊宫、大慈寺', '全天', '回廊纵深+人物，构图有天然层次'],
+    ]},
+    indoor: { title: '室内（古风茶室、书院、博物馆）', items: [
+      ['古风茶室', '浣花溪公园内茶室、文殊院香园', '下午', '木质结构+茶具+窗棂光影'],
+      ['书院/博物馆', '四川博物院（陶瓷馆、书画馆）、成都博物馆', '全天（室内光线稳定）', '深色木制背景+暖黄灯光'],
+      ['古风民宿', 'Airbnb搜“新中式”“禅意”“古风”', '全天', '有中式家具、屏风、窗棂等元素'],
+    ]}
+  },
+  outfit: [
+    ['全套', '汉服（唐制/宋制/明制皆可）/ 旗袍 / 新中式连衣裙', '浅色系更仙（白、浅绿、淡粉）；深色更沉稳（墨绿、藏蓝、酒红）'],
+    ['上衣', '交领襦衫 / 立领对襟 / 新中式衬衫', '真丝、棉麻、提花面料'],
+    ['下装', '马面裙 / 褶裙 / 阔腿裤（新中式）', '与上衣同色系或撞色，材质垂顺'],
+    ['鞋子', '绣花鞋 / 布鞋 / 尖头平底鞋（新中式配）', '浅色、缎面、低调'],
+    ['配饰', '团扇/折扇、发簪/步摇、玉镯/银镯', '一两件即可，不要堆砌'],
+  ],
+  outfitNote: '汉服拍摄最重要是“形制对”——衣服穿法要对，可提前让模特看教程。新中式穿搭更日常，对普通人更友好。颜色以低饱和色系为主，避免荧光色和现代感强的元素（运动鞋、智能手表等）。',
+  props: [
+    ['团扇/折扇', '手持、半遮面、轻摇', '网购¥20-50，或汉服租赁店借用'],
+    ['油纸伞', '撑伞、靠肩、放在身旁', '网购¥30-60，浅色素面最佳'],
+    ['古书/卷轴', '手持翻阅、放在石桌上', '随便一本线装书或卷轴道具'],
+    ['茶具（盖碗/小茶杯）', '端茶、斟茶、放在手边', '家里有或茶室借用'],
+    ['笛子/箫（不会吹也没关系）', '手持、靠在唇边、横放在膝上', '网购道具¥30-80'],
+    ['竹篮', '挎着、放在脚边、装花', '网购¥20-40'],
+  ],
+  camSettings: [
+    ['拍摄模式', '<b>A档（光圈优先）</b>', '只管光圈，相机自动配快门'],
+    ['光圈', '<b>f/1.8 - f/2.8</b>', '人物虚化突出；想环境（建筑/竹林）也清楚收至f/4-f/5.6'],
+    ['快门', '自动匹配，确保 ≥ <b>1/200s</b>', '低于1/200s可能拍糊'],
+    ['ISO', '先设 <b>100</b>，暗了再往上加至400-800', '古风需要干净画质，尽量低ISO'],
+    ['白平衡', '手动设 <b>5200K</b>（晴天）/ <b>5500K</b>（阴天）', '见速查卡'],
+    ['白平衡偏移', '<b>B1, G1</b>', '见速查卡，淡雅青绿调'],
+    ['照片风格', '<b>人像</b>', '见速查卡'],
+    ['曝光补偿', '<b>0 至 +0.3 EV</b>', '古风不宜过曝，保留高光细节（尤其是浅色衣服）'],
+  ],
+  camTip: '古风拍摄重点看浅色衣服的高光是否溢出——直方图右侧不能撞墙。白衣服过曝死白是古风最常见的翻车点。',
+  poses: {
+    outdoor: { title: '户外版（园林/古建/竹林）', items: [
+      ['“你慢慢走，走到那棵竹子旁边，回头看我的时候把扇子挡一半脸”', '蹲下平拍（35mm），拍到全身和竹林'],
+      ['“站在这面红墙前面，侧身，抬头看墙头的树影”', '侧拍（50mm），红墙+侧脸轮廓'],
+      ['“坐到这个石凳/台阶上，把裙摆放好，低头看手里的扇子”', '俯拍（35mm），拍到裙摆铺开'],
+      ['“撑着油纸伞，慢慢转一圈，伞转的时候头微微低”', '平拍或仰拍（35mm），伞+人物旋转动态'],
+      ['“靠在回廊的柱子上，一只手垂下来，看远方”', '侧拍（50mm），回廊纵深做背景'],
+      ['“走过这道门/拱门，迈步子的时候放慢一点”', '正拍（50mm），门框构图+人物穿行'],
+    ]},
+    indoor: { title: '室内版（茶室/书院/博物馆）', items: [
+      ['“坐茶桌边，双手端起盖碗，低头闻茶香”', '侧拍（50mm），拍手部动作和侧脸'],
+      ['“站在窗棂旁边，让光从格子间透过来打在身上”', '侧拍或正拍（50mm），窗棂光影打在脸上'],
+      ['“坐到书桌前，翻开书，手指沿着字慢慢移”', '俯拍（35mm），桌面+人物+书'],
+      ['“靠在屏风旁边，一只手扶着屏风边缘，侧头看外面”', '侧拍（50mm），屏风+人物构成画面层次'],
+      ['“把发簪拿下来，重新插一下头发的动作”', '正拍（50mm），特写上半身'],
+      ['“坐到窗边，团扇半挡面，眼神从扇子上方看过来”', '正拍（50mm），扇子遮挡+眼神交流'],
+    ]}
+  },
+  scripts: [
+    ['园林/公园', '“你好，我在练习拍古风/新中式风格的照片，你在竹林/红墙边的气质特别适合这个场景，可以帮你拍两张吗？拍完发给你。”'],
+    ['古街/老建筑', '“你好打扰了，我在做一组古风摄影练习，旗袍/汉服和这个老建筑的氛围很搭，愿意让我拍几张吗？”'],
+  ],
+  scriptTip: '拍古风遇到穿汉服/旗袍的路人几率最高（尤其在杜甫草堂、武侯祠），可以直说“我也在练古风摄影”。但如果对方没穿古风服饰，不要勉强用这组话术——换胶片或日系话术更自然。',
+  post: [
+    ['总体方向', '淡雅、低饱和、青绿调、水墨感'],
+    ['色温', '<b>-5 至 +5</b>（根据现场微调，不过分偏）'],
+    ['曝光', '<b>0 至 +0.3</b>'],
+    ['对比度', '<b>-10 至 -15</b>'],
+    ['自然饱和度', '<b>-5 至 0</b>'],
+    ['饱和度', '<b>-5 至 -10</b>'],
+    ['高光', '加一点青/绿'],
+    ['阴影', '加一点暖（棕/黄），形成冷暖对比'],
+    ['清晰度', '<b>-5 至 -10</b>'],
+  ],
+  postApp: 'VSCO 滤镜 <b>A6</b>（干净冷调）或 <b>J1</b>（淡雅褪色），曝光+0.5，对比度−1，饱和度−1。Lightroom搜“Chinese Ancient Style”或“Ink Painting”预设。',
+  checklist: [
+    '相机 + 电池（充满，备电也带上） + SD卡（清空且有备用）',
+    '镜头（推荐35mm或50mm定焦 或 变焦24-70mm；拍大场景带广角）',
+    '机内预设：白平衡偏移B1,G1 和 照片风格“人像”已设好',
+    '道具：团扇、油纸伞、古书、茶具、发簪',
+    '给模特准备一瓶水（汉服穿着较热，多带一瓶）',
+    '反光板（如有，竹林中光线斑驳需要补面光）',
+    '查看天气 + 确认拍摄地点是否营业/需门票/允许拍摄（杜甫草堂需门票¥60，武侯祠¥50）',
+    '提前一天发“给模特的文案”+ 汉服穿着教程链接',
+    '自己穿方便蹲下、移动的衣服鞋子（古风拍摄经常需要跨石阶、走石子路）',
+    '带防蚊液（园林/竹林蚊子非常多）',
+    '带湿巾/纸巾',
+    '如果模特自备汉服，提醒带齐：中衣+外衣+裙子+腰带+鞋+配饰',
+  ]
+};
+
+/* ---------- D. 胶片复古 ---------- */
+/* ---------- D. 胶片复古 ---------- */
+STYLES['D'] = {
+  code: 'D', name: '胶片复古', subtitle: '怀旧颗粒的故事感',
+  copy: '“想拍一组像老照片一样有温度的照片——有胶卷颗粒的质感，有褪色但不褪情感的时光感。你不用刻意看镜头，就像在老街上闲逛、在旧书店翻一本泛黄的书那样自然。这组照片记录的不是“完美”，而是真实的、有故事的你。”',
+  preset: [
+    ['白平衡', '手动设 <b>5800K</b>（晴天）/ <b>6000K</b>（阴天）', '偏暖调，模拟胶片色温'],
+    ['白平衡偏移', '<b>A3, M1</b>', '暖调+轻微洋红，营造胶片褪色感'],
+    ['照片风格', '<b>中性</b>', '保留更多细节，为后期留空间'],
+    ['— 强度 / 精细度 / 临界值', '<b>默认</b>', '保持出厂值'],
+    ['— 反差', '<b>-1</b>', '柔和过渡，留出胶片曲线的宽容度'],
+    ['— 饱和度', '<b>-2</b>', '低饱和是胶片感的基础'],
+    ['— 色调', '<b>0</b>', '保持自然肤色'],
+  ],
+  presetNote: '“中性”照片风格比“人像”保留更多暗部细节，方便后期调出胶片曲线。如果拍女生担心肤色不够柔，也可用“人像”。',
+  summary: [
+    ['核心关键词', '怀旧、颗粒感、故事感、生活胶片、低饱和、褪色'],
+    ['难度系数', '★★☆（对场景和后期要求中等，对摆姿要求低）'],
+    ['拍摄时长', '约1.5-2小时'],
+    ['最佳天气', '阴天 / 多云 / 傍晚（柔和均匀光最佳；硬光下也能拍但味道不同）'],
+    ['最佳时间', '下午15:00-17:00（斜阳+长阴影，胶片黄金时段）'],
+    ['推荐地点（成都）', '东郊记忆、镋钯街老街区、玉林老小区、人民公园鹤鸣茶社'],
+    ['最佳季节/气候补充', '秋冬最佳（落叶枯枝+旧色调更浓，哈气可见的低温感）；阴天比晴天更有味道，毛毛雨天气反而是加分项'],
+  ],
+  scenes: {
+    outdoor: { title: '户外（老街道、工业区、老居民区）', items: [
+      ['老街道/老巷子', '镋钯街周边老街区、宽窄巷子旁小街', '下午15-17点', '斑驳老墙+斜阳长影，自带年代滤镜'],
+      ['旧工业区/文创园', '东郊记忆（旧工厂改造）', '全天（阴天更佳）', '红砖墙、旧铁轨、锈蚀金属，工业胶片感'],
+      ['老居民区', '玉林老小区、水井坊片区', '下午15-17点', '晾衣绳、旧门窗、生活痕迹丰富'],
+      ['旧铁轨/站台', '东郊记忆铁轨段、二仙桥公园', '下午', '轨道延伸线+人物，叙事感很强'],
+    ]},
+    indoor: { title: '室内（旧书店、老茶馆、旧房子）', items: [
+      ['旧书店', '方所（太古里地下）、文轩Books（九方）', '全天', '暖黄灯光+书架纵深，氛围安静'],
+      ['老茶馆', '人民公园鹤鸣茶社、大慈寺茶社', '下午14-16点', '竹椅+盖碗茶+烟雾+老建筑，正宗成都胶片味'],
+      ['旧房子/复古民宿', 'Airbnb搜“复古”“老房子”“80年代”', '全天', '旧家具、老地板、窗边自然光'],
+      ['老式理发店/杂货铺', '玉林、水井坊老街区（需先征得店主同意）', '下午', '怀旧道具丰富，不用额外准备'],
+    ]}
+  },
+  outfit: [
+    ['上衣', '宽松毛衣 / 格子衬衫 / 牛仔外套 / 纯色棉T', '卡其、棕色、牛仔蓝、墨绿、姜黄'],
+    ['下装', '直筒牛仔裤 / 灯芯绒裤 / 棉麻长裙', '深蓝、棕色、卡其'],
+    ['鞋子', '帆布鞋 / 马丁靴 / 复古运动鞋', '白色、棕色、黑色'],
+    ['配饰', '帆布包、棒球帽、发带、复古手表', '低调不花哨，旧旧的质感更好'],
+  ],
+  outfitNote: '全身低饱和色系，避免荧光色和纯白（纯白在胶片调色中容易跳）。卡其/牛仔蓝/棕色/墨绿/姜黄为主，材质选棉、灯芯绒、牛仔布、毛织等有质感的。“穿旧不穿新”是胶片风的小窍门。',
+  props: [
+    ['胶片相机/老相机（当道具）', '挂在脖子上、拿在手里、假装在拍', '借一台或网购道具机¥200-400（也可用手机壳代替）'],
+    ['旧书/旧杂志', '翻书、挡脸、放在旁边', '旧书店或二手市场，封面泛黄更好'],
+    ['汽水玻璃瓶', '手持、放地上、透过玻璃瓶拍', '便利店买玻璃瓶可乐/芬达¥5-8'],
+    ['有线耳机', '挂着听歌、缠绕手指', '自己的，白色或黑色都可以'],
+    ['旧伞（透明或深色格子）', '撑伞、收伞、靠在墙边', '家里找，透明伞雨天很出片'],
+  ],
+  camSettings: [
+    ['拍摄模式', '<b>A档（光圈优先）</b>', '只管光圈，相机自动配快门'],
+    ['光圈', '<b>f/1.8 - f/2.8</b>', '背景虚化开最大，想环境融入画面收到f/4'],
+    ['快门', '自动匹配，确保 ≥ <b>1/200s</b>', '低于1/200s可能拍糊'],
+    ['ISO', '先设 <b>200</b>，暗了可到800-1600', '胶片风不惧噪点，颗粒感反而是风格'],
+    ['白平衡', '手动设 <b>5800K</b>（晴天）/ <b>6000K</b>（阴天）', '见速查卡'],
+    ['白平衡偏移', '<b>A3, M1</b>', '见速查卡，暖调复古肤色'],
+    ['照片风格', '<b>中性</b>', '见速查卡，保留暗部细节'],
+    ['曝光补偿', '<b>0 至 +0.3 EV</b>', '不必像日系那样过曝，保留暗部层次'],
+  ],
+  camTip: '胶片感的直方图应该偏向中间，高光不溢出、暗部不压死。ISO可以放宽到800-1600，噪点+后期颗粒 = 胶片质感。',
+  poses: {
+    outdoor: { title: '户外版（老街道/工业区/居民区）', items: [
+      ['“你往前走，到前面那根电线杆/路灯旁边，回头看我的时候不用笑，自然一点就行”', '蹲下平拍（35mm），全身或半身，抓自然回头'],
+      ['“靠着这个老墙/铁门/红砖墙，一只手插口袋，看远处”', '侧拍（50mm），侧脸轮廓+老墙纹理'],
+      ['“坐到路边的台阶上，翻开书，低着头慢慢翻”', '低角度平拍或俯拍（35mm），画面有纵向延伸'],
+      ['“站在旧铁轨上，低头看轨道，走一步”', '跟拍或连拍（35mm），铁轨线条引导视线'],
+      ['“推门进店的那个瞬间，我做连拍，你不用管我”', '侧拍（35mm），抓门框+人物进入的瞬间'],
+      ['“你正常走就行，我在对面或后面跟拍，走路看手机也行”', '跟拍（35mm）或对面拍（50mm），连拍走路姿态'],
+    ]},
+    indoor: { title: '室内版（书店/茶馆/旧房子）', items: [
+      ['“坐窗边，翻开一本旧书，低头翻页，不用管我拍到哪一页”', '侧面平拍（50mm），窗光+书页的柔光反射'],
+      ['“双手捧着杯子/玻璃瓶，低头看里面，停一下”', '平拍或透过瓶子拍（50mm），玻璃折射有质感'],
+      ['“趴在桌子上，侧过头看窗外，放松手肘”', '平拍（35mm），桌面+人物的横向构图'],
+      ['“站在书架前，伸手抽一本书，抽到一半停住”', '侧拍（50mm），书架纵深+人物侧面'],
+      ['“靠着墙，低头看手机，手指自然滑动”', '平拍（50mm），日常真实状态最耐看'],
+      ['“整理头发/拉袖子/系鞋带”', '抓拍（35mm），不经意的动作最有故事感'],
+    ]}
+  },
+  scripts: [
+    ['老街道/旧巷子', '“你好，我在练习拍胶片风格的照片，你的穿搭很有复古的味道，和这条老街特别搭。可以帮你拍两张吗？拍完发给你。”'],
+    ['旧书店/咖啡馆', '“不好意思打扰了，我在这边练摄影，你坐着看书的样子特别有故事感，愿意让我拍一张吗？”'],
+    ['老茶馆/公园', '“你好打扰一下，我在练习拍胶片风格，你喝茶/坐着的样子和这个老茶馆的氛围特别配，可以帮你拍两张吗？”'],
+  ],
+  scriptTip: '胶片风格的搭讪重点在“氛围”——“你和这个场景特别搭”比“你好看”更容易让人接受，因为夸的是ta与环境的关系而非外貌。老街区的人通常比商业区的人更愿意配合。',
+  post: [
+    ['总体方向', '暖调、褪色、颗粒感、胶片模拟曲线'],
+    ['色温', '<b>+5 至 +15</b>（偏暖）'],
+    ['曝光', '<b>0 至 +0.3</b>'],
+    ['对比度', '<b>-5 至 -10</b>'],
+    ['自然饱和度', '<b>-5 至 0</b>'],
+    ['饱和度', '<b>-5 至 -15</b>'],
+    ['高光', '加暖黄/橙'],
+    ['阴影', '加一点点绿或蓝（胶片色偏）'],
+    ['颗粒', '适量添加（LR颗粒量15-30）'],
+    ['清晰度', '<b>-5 至 -10</b>'],
+  ],
+  postApp: 'VSCO 滤镜 <b>M5</b>（复古褪色）或 <b>C1</b>（暖调胶片），颗粒+2，褪色+2，对比度−1。Lightroom搜“Film Vintage”或“Kodak Portra”预设。电脑上可用 RNI Films 或 DxO FilmPack 插件获得更真实的胶片模拟。',
+  checklist: [
+    '相机 + 电池（充满，备电也带上） + SD卡（清空且有备用）',
+    '镜头（推荐35mm或50mm定焦 或 变焦24-70mm）',
+    '机内预设：白平衡偏移A3,M1 和 照片风格“中性”已设好',
+    '道具：旧书、汽水玻璃瓶、耳机、旧伞',
+    '给模特准备一瓶水',
+    '查看天气（阴天/毛毛雨反而是好事，不用取消）',
+    '确认拍摄地点（东郊记忆免费开放，茶馆需消费）',
+    '提前一天发“给模特的文案”',
+    '自己穿方便蹲下、跑动的衣服鞋子',
+    '带纸巾/湿巾',
+    '老街区拍摄注意不要打扰居民，保持礼貌',
+  ]
+};
+/* ---------- E. 都市冷感 ---------- */
+STYLES['E'] = {
+  code: 'E', name: '都市冷感', subtitle: '极简高级的现代感',
+  copy: '“想拍一组像建筑杂志封面一样的照片——线条干净，光线利落，有一种‘我很酷但我懒得说’的气场。你不用笑，不用看镜头，就像刚从一个很重要的会议走出来、站在美术馆里发呆那样。这组照片记录的是你最冷静、最有力量的样子。”',
+  preset: [
+    ['白平衡', '手动设 <b>4800K</b>（晴天）/ <b>5000K</b>（阴天）', '偏冷调，强化现代感和距离感'],
+    ['白平衡偏移', '<b>B2, G0</b>', '纯冷调，不偏绿不偏粉'],
+    ['照片风格', '<b>中性</b>', '保留明暗对比，线条更利落'],
+    ['— 强度 / 精细度 / 临界值', '<b>默认</b>', '保持出厂值'],
+    ['— 反差', '<b>+1</b>', '略增加反差，突出建筑感的明暗分界'],
+    ['— 饱和度', '<b>-1</b>', '低饱和显高级'],
+    ['— 色调', '<b>0</b>', '保持自然肤色不偏色'],
+  ],
+  presetNote: '反差+1是都市冷感区别于其他风格的关键——多数风格都减反差追求柔和，冷感风格反其道而行，追求锐利的明暗分界。',
+  summary: [
+    ['核心关键词', '极简、高级、冷感、现代、建筑感、距离感'],
+    ['难度系数', '★★☆（对场景和穿搭要求高，对光线要求中等）'],
+    ['拍摄时长', '约1.5-2小时'],
+    ['最佳天气', '晴天或薄云（需要阳光制造几何阴影）'],
+    ['最佳时间', '上午10:00-12:00 / 下午14:00-16:00（阳光角度制造建筑阴影）'],
+    ['推荐地点（成都）', '麓湖A4美术馆、成都当代影像馆、交子大道、IFS国际金融中心、来福士广场'],
+    ['最佳季节/气候补充', '全年皆可（室内为主不受季节限制）；户外现代建筑场景避开雾霾天即可；强阳光天反而最好，阴影更锐利'],
+  ],
+  scenes: {
+    outdoor: { title: '户外（现代建筑、城市地标）', items: [
+      ['现代建筑群', '交子大道（双子塔+金融城）、天府国际金融中心', '上午10-12点', '玻璃幕墙反光+几何线条，冷感拉满'],
+      ['城市天台/露台', 'IFS国际金融中心7楼露台、来福士广场天台', '下午14-16点', '城市天际线+开阔视野'],
+      ['极简广场', '天府广场（天气好时）、东郊记忆西广场', '上午10-12点', '大面积地面+几何建筑立面'],
+    ]},
+    indoor: { title: '室内（美术馆、展厅、现代商业体）', items: [
+      ['美术馆/画廊', '麓湖A4美术馆、成都当代影像馆', '全天', '白墙+展品+大窗光，本身就是设计作品'],
+      ['设计书店/买手店', '方所（太古里）、無早（镋钯街）', '全天', '设计感陈列+暖黄灯光与窗外冷光对比'],
+      ['现代商场公区', 'IFS、太古里（非店铺区，走廊/楼梯/电梯间）', '避开周末高峰', '大理石地面+金属栏杆+镜面反射'],
+    ]}
+  },
+  outfit: [
+    ['上衣', '西装外套 / 纯色高领衫 / 白衬衫（挺括面料）', '黑、白、灰、藏青、驼色'],
+    ['下装', '阔腿西裤 / 直筒裤 / 铅笔裙', '黑、白、灰、卡其'],
+    ['鞋子', '尖头高跟鞋 / 乐福鞋 / 切尔西靴', '黑色、白色、金属色'],
+    ['配饰', '墨镜（建筑感轮廓）、金属手表、简约耳饰', '银色/白金/黑色，不选金色（太暖）'],
+  ],
+  outfitNote: '全身不超过2-3色，以黑白灰为主，重点在“廓形”——衣服的剪裁线条要利落。不要碎花、蕾丝、荷叶边等软性元素。面料的挺括度比颜色更重要：选西装料、硬挺棉、皮革，不选雪纺、针织等软塌材质。',
+  props: [
+    ['墨镜', '戴着、推到头顶、拿在手里', '选建筑感/几何轮廓的款式'],
+    ['咖啡杯（外带杯，简洁设计）', '手持、放旁边', '星巴克或M Stand的极简杯'],
+    ['杂志/画册（封面设计感强）', '翻阅、夹在腋下', '选一本封面干净的设计/建筑类杂志'],
+    ['手机', '看手机的状态、对着镜子自拍', '本身的手机'],
+  ],
+  camSettings: [
+    ['拍摄模式', '<b>A档（光圈优先）</b>', '只管光圈，相机自动配快门'],
+    ['光圈', '<b>f/2.8 - f/5.6</b>', '比日系收一档，环境线条也是画面的一部分'],
+    ['快门', '自动匹配，确保 ≥ <b>1/250s</b>', '冷感风格需要画面锐利，快门高一点防微抖'],
+    ['ISO', '先设 <b>100</b>，暗了往上加至400', '优先低ISO保持画面干净'],
+    ['白平衡', '手动设 <b>4800K</b>（晴天）/ <b>5000K</b>（阴天）', '见速查卡'],
+    ['白平衡偏移', '<b>B2, G0</b>', '见速查卡，纯正冷调'],
+    ['照片风格', '<b>中性</b>', '见速查卡，反差+1'],
+    ['曝光补偿', '<b>0 EV</b>', '冷感风格不需要过曝，曝光适中即可'],
+  ],
+  camTip: '都市冷感不追求虚化——把光圈收到f/4甚至f/5.6，让建筑的几何线条也保持清晰。人物和环境的“对峙感”是冷感的精髓。',
+  poses: {
+    outdoor: { title: '户外版（建筑/广场/天台）', items: [
+      ['“站在这面干净的墙前面，双手插口袋，身体重心放一条腿上，看远方”', '平拍（50mm），全身或大半身，对称构图'],
+      ['“靠着玻璃栏杆/金属栏杆，一只手搭在上面，低头看楼下”', '侧拍（50mm），拍到城市背景'],
+      ['“慢慢走过这面玻璃幕墙，头微微偏着看自己的倒影”', '侧拍（35mm），玻璃反射+实体的双重画面'],
+      ['“坐到台阶上，一只脚放低一级，墨镜拿在手里把玩”', '正拍或侧拍（50mm），利用台阶制造纵向线条'],
+      ['“站在建筑立柱旁边，身体一半在光里一半在阴影里”', '正拍（50mm），明暗分界的几何感'],
+      ['“从远处走过来，步子大一点，像T台走路一样”', '远距离长焦压缩（50mm），建筑背景虚化但可辨'],
+    ]},
+    indoor: { title: '室内版（美术馆/展厅/买手店）', items: [
+      ['“站在这幅画/展品前面，背影对着我，头微微侧一点”', '平拍（50mm），人物+艺术品同框'],
+      ['“坐到展厅的长凳上，翘二郎腿，一只手放在膝盖上”', '侧拍（50mm），拍到展厅空间纵深'],
+      ['“站在大落地窗前，逆光，背影，一只手扶窗框”', '逆光拍（50mm），人物剪影+城市窗外景'],
+      ['“在书店/买手店里，伸手拿一本书/一件物品，手臂线条出来”', '侧拍（50mm），拍到手臂线条和空间'],
+      ['“靠在白墙边，一只手抱胸前，另一只自然下垂，看地面”', '平拍（50mm），极简背景+人物'],
+      ['“对着一面大镜子/玻璃，整理墨镜/衣领”', '利用镜面反射拍（35mm），双重画面'],
+    ]}
+  },
+  scripts: [
+    ['美术馆/展厅', '“你好，我在做一组都市风格的摄影练习，你在展品前的轮廓特别好看，和这个空间的线条很配。可以帮你拍一张吗？拍完发给你。”'],
+    ['现代建筑/广场', '“你好打扰了，我在练习拍建筑感的人像，你的穿搭风格和这栋建筑的线条感特别搭。愿意让我拍几张吗？”'],
+  ],
+  scriptTip: '都市冷感的搭讪要体现“审美”——夸的是穿搭品味和空间关系，不是外貌。拍完后可以加一句“这个构图很像杂志片”，对方会更开心。',
+  post: [
+    ['总体方向', '冷调、高反差、锐利、去情绪化'],
+    ['色温', '<b>-5 至 -10</b>（偏冷）'],
+    ['曝光', '<b>0 至 +0.3</b>'],
+    ['对比度', '<b>+5 至 +10</b>'],
+    ['自然饱和度', '<b>-5 至 0</b>'],
+    ['饱和度', '<b>-5 至 -10</b>'],
+    ['高光', '加一点蓝/银'],
+    ['阴影', '保持干净，不加色偏'],
+    ['清晰度', '<b>+5 至 +10</b>（线条锐利）'],
+  ],
+  postApp: 'VSCO 滤镜 <b>HB1</b>（冷调现代）或 <b>S2</b>（干净明亮），对比度+1，锐化+1，色温−1。手机推荐醒图App的“冷淡”或“高级灰”滤镜。',
+  checklist: [
+    '相机 + 电池（充满，备电也带上） + SD卡（清空且有备用）',
+    '镜头（推荐35mm或50mm定焦 或 变焦24-70mm）',
+    '机内预设：白平衡偏移B2,G0 和 照片风格“中性”反差+1已设好',
+    '道具：墨镜、咖啡杯、杂志',
+    '查看天气 + 确认拍摄地是否需门票/预约（美术馆通常周一闭馆）',
+    '提前一天发“给模特的文案”',
+    '自己穿搭也要配合风格（黑色/白色系），方便入镜或示范',
+    '确认美术馆/展厅是否允许相机拍摄（有些需提前申请）',
+    '带湿巾（玻璃栏杆/台阶可能有灰尘）',
+  ]
+};
+
+/* ---------- F. 情绪暗调 ---------- */
+/* ---------- F. 情绪暗调 ---------- */
+STYLES['F'] = {
+  code: 'F', name: '情绪暗调', subtitle: '强烈光影的氛围感',
+  copy: '“想拍一组像电影截图一样的照片——有一束光从某个地方打过来，把你切成光和暗两半。你不用笑，不用刻意做什么，就站在那束光里，想心事。这组照片记录的不是好看，是你身上那种说不出来的故事。”',
+  preset: [
+    ['白平衡', '手动设 <b>5000K</b>（晴天）/ <b>5200K</b>（阴天）', '中性偏冷，不暖不粉'],
+    ['白平衡偏移', '<b>B1, G0</b>', '微微偏冷，强化阴翳氛围'],
+    ['照片风格', '<b>中性</b>', '保留明暗细节，后期空间大'],
+    ['— 强度 / 精细度 / 临界值', '<b>默认</b>', '保持出厂值'],
+    ['— 反差', '<b>+1</b>', '加强明暗对比，暗部更有力度'],
+    ['— 饱和度', '<b>-2</b>', '大幅降低饱和，情绪不需要颜色'],
+    ['— 色调', '<b>0</b>', '保持自然肤色'],
+  ],
+  presetNote: '情绪暗调的核心是“光比”——让明亮区和阴影区之间有足够的差距。机内反差+1配合后期拉曲线，可以压出电影感的暗部。',
+  summary: [
+    ['核心关键词', '光影、氛围、情绪张力、暗调、电影感、孤寂'],
+    ['难度系数', '★★★（对光线控制和后期要求高）'],
+    ['拍摄时长', '约1.5-2小时'],
+    ['最佳天气', '晴天（需要强烈方向光制造阴影）；阴天平淡不适合'],
+    ['最佳时间', '下午16:00-18:00（低角度太阳光，光束更长更有方向感）'],
+    ['推荐地点（成都）', '东郊记忆暗角、地下车库、老教学楼走廊、废弃厂房（注意安全）'],
+    ['最佳季节/气候补充', '秋冬最佳（太阳角度低，光线更长更有戏剧性；天黑早可以拍黄昏过渡到暗的层次）；夏季要等到傍晚光线才有力度'],
+  ],
+  scenes: {
+    outdoor: { title: '户外（走廊、废墟、地下通道）', items: [
+      ['走廊/过道', '东郊记忆长廊、四川大学老教学楼走廊', '下午16-18点', '走廊一端进光形成天然聚光灯效果'],
+      ['废墟/旧厂房', '东郊记忆边角区域、二仙桥旧厂区（注意安全）', '下午16-18点', '破窗/破顶投下的光束，灰尘在光中可见'],
+      ['地下车库', 'IFS/太古里地下车库（找角落人少处）', '全天', '单一光源（出入口/灯管），天然暗调场景'],
+    ]},
+    indoor: { title: '室内（暗房间、民宿、电影院走廊）', items: [
+      ['暗房间/民宿', 'Airbnb搜“工业风”“暗调”“水泥”', '全天', '单窗/单灯打光，可控性强'],
+      ['旧式楼梯间', '镋钯街老房子、四川大学老旧教学楼', '下午', '从上或从下进来的单一光束'],
+      ['电影院/剧院走廊', '成都各大影院的走廊（需协商）', '非高峰时段', '红色/暗色墙壁+射灯，天然暗调场景'],
+    ]}
+  },
+  outfit: [
+    ['上衣', '深色修身毛衣 / 黑色吊带 / 深色衬衫', '黑、深灰、深棕、墨绿'],
+    ['下装', '修身长裤 / 黑色半身裙', '黑、深灰'],
+    ['鞋子', '黑色短靴 / 马丁靴 / 黑色平底鞋', '黑色为主'],
+    ['配饰', '细链项链、简单戒指、皮带（金属扣）', '银色/黑色，小巧低调'],
+  ],
+  outfitNote: '深色系为主（黑/深灰/墨绿/深棕），避免浅色和白色（会在暗调中跳出来破坏氛围）。材质选有质感的：针织、皮革、牛仔、棉麻。重点是“身体线条”——修身剪裁比宽松的更能在光影中突出轮廓。',
+  props: [
+    ['一束花（深色系/干花）', '手持、放在旁边、遮脸', '网购干花¥20-40，深红/暗紫/干枯感'],
+    ['烟/电子烟（如果模特接受）', '手持、烟雾增加氛围', '尊重模特意愿，不强迫'],
+    ['信封/旧信件', '手持、翻开、放在膝上', '自己准备或旧书店买'],
+    ['围巾/披肩（深色）', '披着、缠绕手指、遮脸', '模特自己的或家里带'],
+  ],
+  camSettings: [
+    ['拍摄模式', '<b>M档（手动）或 A档</b>', 'M档更精确控制曝光；A档也可以但要配合曝光补偿'],
+    ['光圈', '<b>f/1.8 - f/2.8</b>', '大光圈让暗部更暗，突出光束中的人物'],
+    ['快门', 'A档自动匹配；M档手动，确保 ≥ <b>1/200s</b>', '暗光下注意快门速度'],
+    ['ISO', '从 <b>100</b> 开始，暗了可到800-1600', 'R7高感不错，1600以内噪点可控'],
+    ['白平衡', '手动设 <b>5000K</b>（晴天）/ <b>5200K</b>（阴天）', '见速查卡'],
+    ['白平衡偏移', '<b>B1, G0</b>', '见速查卡，微微冷调'],
+    ['照片风格', '<b>中性</b>', '见速查卡，反差+1'],
+    ['曝光补偿', '<b>-0.3 至 -0.7 EV</b>', '关键：暗调要欠曝！让暗部真的暗下去'],
+  ],
+  camTip: '情绪暗调的曝光策略是“对亮部测光”——把测光点对在光束打在模特脸上的区域，暗部自然就会压暗。千万不要对暗部测光，那样会把整个画面提亮，破坏氛围。',
+  poses: {
+    outdoor: { title: '户外版（走廊/废墟/通道）', items: [
+      ['“站到那束光里，闭眼睛，脸微微朝光的方向抬起来”', '平拍（50mm），人物在光中，周围压暗'],
+      ['“一只手扶着墙，身体一半在光里一半在阴影里，看暗处”', '侧拍（50mm），明暗交界线正好在脸部中轴'],
+      ['“往前走，走进光里然后停一下，低头”', '连拍（35mm），抓从暗到明的过渡'],
+      ['“蹲下/坐到地上，手自然搭在膝盖上，看地上”', '俯拍（35mm），头顶有光束洒下'],
+      ['“背对着我，站在光里，手自然垂在身体两侧”', '背影（50mm），光束轮廓+地面长影'],
+      ['“靠着生锈的栏杆/旧墙，手指轻轻摸粗糙的表面”', '侧拍特写（50mm），手+质感+暗调氛围'],
+    ]},
+    indoor: { title: '室内版（暗房间/民宿）', items: [
+      ['“坐床上/地板上，让窗帘缝隙的那一道光正好打在脸上”', '正拍或侧拍（50mm），一道光束的特写'],
+      ['“站在窗户旁边，侧身，让窗光只照亮半边脸”', '侧拍（50mm），半明半暗的经典情绪光'],
+      ['“趴着，手臂撑起上半身，光从侧面过来”', '低角度侧拍（35mm），身体线条+光影'],
+      ['“坐到墙角，双腿蜷起来，手臂抱膝，看旁边”', '平拍或俯拍（35mm），最暗的角落+一点点光'],
+      ['“手轻轻抚摸脖子/锁骨，眼睛看别处”', '特写（50mm），手部动作+锁骨光影'],
+      ['“站到门口，门半开，光从门缝里漏进来打在身上”', '从暗处往亮处拍（50mm），门缝光效'],
+    ]}
+  },
+  scripts: [
+    ['老街区/文创园', '“你好，我在练习拍暗调情绪感的人像，你站在那边的光影特别有电影感。可以帮你拍两张吗？拍完发给你。”'],
+    ['美术馆/展览', '“不好意思打扰了，我在做一组暗调摄影练习，你在这个空间里的气质特别适合。愿意让我拍一张吗？”'],
+  ],
+  scriptTip: '暗调搭讪强调“电影感”和“光影”——这种风格对路人的吸引力比日系更强，因为听起来更“艺术”。但注意：不要在太偏僻的地方搭讪陌生人，安全第一。',
+  post: [
+    ['总体方向', '暗调、高对比、低饱和、电影感色调'],
+    ['色温', '<b>-5 至 0</b>（偏冷或中性）'],
+    ['曝光', '<b>-0.3 至 -0.7</b>'],
+    ['对比度', '<b>+10 至 +20</b>'],
+    ['自然饱和度', '<b>-10 至 -5</b>'],
+    ['饱和度', '<b>-10 至 -20</b>'],
+    ['高光', '保持正常或轻微压暗'],
+    ['阴影', '<b>大幅压暗（-20 至 -40）</b>'],
+    ['黑色色阶', '<b>-10 至 -20</b>（黑点更深）'],
+    ['清晰度', '<b>+5 至 +10</b>（光影边缘锐利）'],
+  ],
+  postApp: 'VSCO 滤镜 <b>B5</b>（黑白暗调）或 <b>P5</b>（电影暗调），曝光−0.5，对比度+1，颗粒+2。Lightroom搜“Cinematic Dark”或“Moody Film”预设。手机醒图搜“暗调”或“电影感”。',
+  checklist: [
+    '相机 + 电池（充满，备电也带上） + SD卡（清空且有备用）',
+    '镜头（推荐35mm或50mm定焦，大光圈必备）',
+    '机内预设：白平衡偏移B1,G0 和 照片风格“中性”反差+1已设好',
+    '道具：深色花束、旧信件、围巾',
+    '查看天气（必须是晴天有方向光，阴天直接取消或换风格）',
+    '提前一天发“给模特的文案”',
+    '安全第一：废墟/废弃建筑需提前踩点确认安全，不独自带模特去偏僻处',
+    '防蚊液（废墟/老房子蚊子多）',
+    '手电筒/补光灯（暗光场景辅助对焦或补一点点眼神光）',
+    '带纸巾/湿巾（老建筑灰尘多）',
+  ]
+};
+
+/* ---------- G. 多巴胺/时尚 ---------- */
+/* ---------- G. 多巴胺/时尚 ---------- */
+STYLES['G'] = {
+  code: 'G', name: '多巴胺/时尚', subtitle: '明快活泼的少女感',
+  copy: '“想拍一组看着就开心的照片——色彩撞得很大胆，笑容不用收着，动作不用端着。就当是出来玩的，你可以转圈、跳起来、对着镜头做鬼脸。这组照片记录的就是你最快乐、最有能量的样子。”',
+  preset: [
+    ['白平衡', '手动设 <b>5400K</b>（晴天）/ <b>5600K</b>（阴天）', '微微偏暖，让肤色健康明亮'],
+    ['白平衡偏移', '<b>A1, M1</b>', '轻微暖洋红，肤色更红润有活力'],
+    ['照片风格', '<b>人像</b>', '肤色好看是重点'],
+    ['— 强度 / 精细度 / 临界值', '<b>默认</b>', '保持出厂值'],
+    ['— 反差', '<b>-1</b>', '柔和一点，色彩已经够抢了'],
+    ['— 饱和度', '<b>0</b>', '不额外加饱和，靠场景色彩本身'],
+    ['— 色调', '<b>-1</b>', '肤色偏粉嫩'],
+  ],
+  presetNote: '多巴胺风格色彩已经够丰富了，机内不需过度调色——重点是白平衡准确，让衣服和场景的色彩真实呈现。',
+  summary: [
+    ['核心关键词', '明快、活泼、少女感、色彩碰撞、快乐、能量'],
+    ['难度系数', '★☆☆（对技术要求最低，重点在氛围和色彩）'],
+    ['拍摄时长', '约1-1.5小时'],
+    ['最佳天气', '晴天（色彩在阳光下最鲜艳）'],
+    ['最佳时间', '上午10:00-12:00 / 下午14:00-16:00'],
+    ['推荐地点（成都）', '欢乐谷、国色天乡、东郊记忆彩色墙、U37创意仓库、IBOX爱盒子'],
+    ['最佳季节/气候补充', '春夏最佳（蓝天白云+绿树+彩色场景，色彩最丰富）；秋冬也可但注意场景色彩是否还鲜艳'],
+  ],
+  scenes: {
+    outdoor: { title: '户外（游乐园、彩色墙、创意园区）', items: [
+      ['游乐园', '欢乐谷、国色天乡、南湖梦幻岛', '上午10-12点（避开下午排队高峰）', '摩天轮+旋转木马+彩色设施，天然多巴胺'],
+      ['彩色墙/涂鸦墙', '东郊记忆彩虹墙、U37创意仓库彩绘墙、IBOX彩色集装箱', '下午14-16点', '彩色背景+充足阳光，出片率极高'],
+      ['创意园区', '梵木创艺区（彩色装置）、东郊记忆（各种彩色立面）', '全天', '彩色建筑+设计感空间'],
+    ]},
+    indoor: { title: '室内（彩色店铺、潮玩店）', items: [
+      ['潮玩/盲盒店', 'POP MART（太古里/IFS）、TOP TOY（万象城）', '非周末避开高峰', '彩色玩具+霓虹灯光'],
+      ['冰淇淋/甜品店', '各种冰淇淋店（粉色/马卡龙色装修的）', '下午', '甜品本身就可以做道具'],
+      ['室内游乐场', '大悦城室内乐园、环球中心室内项目', '全天', '不受天气影响'],
+    ]}
+  },
+  outfit: [
+    ['上衣', '彩色针织衫 / 印花T恤 / 撞色卫衣 / 吊带背心', '亮粉、橙色、荧光绿、电光蓝、明黄——大胆撞色'],
+    ['下装', '牛仔短裤 / 百褶短裙 / 阔腿裤（亮色）', '牛仔蓝、白色、或与上衣撞色'],
+    ['鞋子', '彩色帆布鞋 / 厚底运动鞋 / 马丁靴配彩色袜子', '白色或彩色'],
+    ['配饰', '彩色发箍/发夹、彩色墨镜、串珠项链/手链、彩色包包', '颜色越多越好'],
+  ],
+  outfitNote: '多巴胺的核心是“敢穿”——颜色越亮越好，撞色越猛越好。粉+橙、紫+绿、蓝+黄……打破常规配色规则。如果没有那么多彩色衣服，一件亮色上衣+白色下装也能出效果。Y2K风格、千禧辣妹风都很适合。',
+  props: [
+    ['气球（彩色/氦气）', '手持、飘在空中、挡脸', '网购¥15-30，或游乐园门口买'],
+    ['泡泡机', '对着镜头吹泡泡、边走边吹', '网购¥15-25，小朋友玩具区也有'],
+    ['棒棒糖/冰淇淋', '拿着吃、对着镜头展示', '现场买，颜色鲜艳的'],
+    ['彩色墨镜（造型款）', '戴着、推到头顶、拿在手里玩', '网购¥20-40'],
+    ['拍立得/一次性胶片机（当道具）', '假装在拍、挂在脖子上', '自己的或借'],
+  ],
+  camSettings: [
+    ['拍摄模式', '<b>A档（光圈优先）</b>', '只管光圈，相机自动配快门'],
+    ['光圈', '<b>f/1.8 - f/2.8</b>', '背景虚化开最大，人物突出'],
+    ['快门', '自动匹配，确保 ≥ <b>1/250s</b>', '动作多、动感强，快门要更高'],
+    ['ISO', '先设 <b>100</b>，暗了再往上加', '阳光下100足够'],
+    ['白平衡', '手动设 <b>5400K</b>（晴天）/ <b>5600K</b>（阴天）', '见速查卡'],
+    ['白平衡偏移', '<b>A1, M1</b>', '见速查卡'],
+    ['照片风格', '<b>人像</b>', '见速查卡'],
+    ['曝光补偿', '<b>+0.3 至 +0.7 EV</b>', '偏亮显得更明快'],
+  ],
+  camTip: '多巴胺风格拍RAW很重要——彩色衣服和背景的饱和度、色相在后期可能需要微调，RAW调色不损失画质。',
+  poses: {
+    outdoor: { title: '户外版（游乐园/彩色墙/创意园）', items: [
+      ['“你转个圈！转慢一点，裙子飞起来的时候我会连拍”', '蹲下仰拍（35mm），拍到裙摆飞扬+蓝天'],
+      ['“双手举高，像刚坐完过山车那样，对我喊一声Yeah！”', '仰拍（35mm），以天空或摩天轮为背景'],
+      ['“拿着气球/泡泡机，一边走一边回头看我一蹦一跳”', '跟拍（35mm），连拍抓动态'],
+      ['“背靠彩墙，一只手插口袋，对镜头做一个wink”', '平拍（50mm），半身，彩色背景'],
+      ['“坐到地上，脚伸出来，双手撑在身后，对我大笑一个”', '低角度拍（35mm），低机位增加活力感'],
+      ['“跑起来！往我这边跑，跑到一半可以跳一下”', '连拍高速快门（35mm），抓跑跳中最自然的帧'],
+    ]},
+    indoor: { title: '室内版（甜品店/潮玩店）', items: [
+      ['“拿着冰淇淋/甜品，咬之前停一下，眼睛看甜品笑”', '俯拍（桌面角度），抓“对食物的期待”'],
+      ['“把墨镜滑到鼻梁上，从镜片上方看我”', '正拍（50mm），半身特写'],
+      ['“双手抱起一堆玩偶/盲盒，脸凑过去蹭一下”', '平拍（50mm），可爱互动'],
+      ['“靠在这种粉色的墙/装置旁边，一条腿弯起来脚踩墙上”', '侧拍（35mm），全身或大半身'],
+      ['“对着镜子里的自己拍一张，我拍你和镜子”', '利用镜面反射（35mm），双重画面'],
+      ['“做鬼脸！三个不同的鬼脸，我连拍”', '正拍连拍（50mm），放松最自然'],
+    ]}
+  },
+  scripts: [
+    ['游乐园/彩色墙', '“你好！我在练习拍色彩风格的照片，你的穿搭太有活力了，和这面彩墙特别搭。可以帮你拍两张吗？拍完发你！”'],
+    ['创意园/打卡点', '“你好打扰了！我在做一组多巴胺风格的摄影练习，你今天这身穿搭太合适了。愿意让我拍几张吗？”'],
+  ],
+  scriptTip: '在游乐园/彩色墙这种地方，别人本来就在拍照——搭讪更容易。你可以先帮对方拍一张她们自己的合照（用对方手机），再问能不能用你相机拍。帮了对方的小忙，对方更愿意配合。',
+  post: [
+    ['总体方向', '明亮、鲜艳、高饱和、暖调活泼'],
+    ['色温', '<b>+5 至 +10</b>（微暖）'],
+    ['曝光', '<b>+0.5 至 +1.0</b>'],
+    ['对比度', '<b>-5 至 0</b>'],
+    ['自然饱和度', '<b>+5 至 +15</b>'],
+    ['饱和度', '<b>+5 至 +10</b>'],
+    ['高光', '加一点暖/粉'],
+    ['阴影', '提亮一点（-10至0），不要死黑'],
+    ['清晰度', '<b>-5 至 0</b>'],
+  ],
+  postApp: 'VSCO 滤镜 <b>C6</b>（暖调活力）或 <b>F2</b>（明亮柔和），曝光+0.5，自然饱和度+1。手机推荐轻颜相机“粉夏”或“元气”滤镜直出。',
+  checklist: [
+    '相机 + 电池（充满，备电也带上） + SD卡（清空且有备用）',
+    '镜头（推荐35mm或50mm定焦；游乐园带变焦更灵活）',
+    '机内预设：白平衡偏移A1,M1 和照片风格“人像”已设好',
+    '道具：气球、泡泡机、彩色墨镜、棒棒糖',
+    '查看天气 + 确认游乐园/场馆营业时间与票价',
+    '提前一天发“给模特的文案”',
+    '自己穿得活泼一点，配合氛围',
+    '防晒霜（户外时间长需要补涂）',
+    '反光板（如有，补面光让皮肤更亮）',
+    '充电宝（游乐园拍一天手机容易没电）',
+  ]
+};
+
+/* ---------- H. 森系少女 ---------- */
+/* ---------- H. 森系少女 ---------- */
+STYLES['H'] = {
+  code: 'H', name: '森系少女', subtitle: '梦幻灵动的仙气感',
+  copy: '“想拍一组像森林精灵一样的照片——有穿过树叶洒下来的光斑落在脸上，有裙摆在草尖上滑过的轻盈。你不用刻意做什么，就在林子里走走停停，摸摸树叶，蹲下来闻一朵花。这组照片记录的是你最轻盈、最不食人间烟火的样子。”',
+  preset: [
+    ['白平衡', '手动设 <b>5000K</b>（晴天）/ <b>5200K</b>（阴天）', '微微偏冷，让绿色更翠'],
+    ['白平衡偏移', '<b>B1, G2</b>', '蓝绿偏移，强化森林绿调'],
+    ['照片风格', '<b>人像</b>', '肤色好看，同时绿色表现也好'],
+    ['— 强度 / 精细度 / 临界值', '<b>默认</b>', '保持出厂值'],
+    ['— 反差', '<b>-2</b>', '柔和光影，树林光斑需要宽容度'],
+    ['— 饱和度', '<b>-1</b>', '森系不宜太艳，淡雅为上'],
+    ['— 色调', '<b>-1</b>', '肤色偏粉，在绿色环境中更突出'],
+  ],
+  presetNote: '森系的关键是把绿色拍好看——G2偏移让树叶和草地更翠绿，B1则让整体色调清冷。在树林里拍完第一张后检查绿色是否偏黄，偏黄说明色温太高。',
+  summary: [
+    ['核心关键词', '梦幻、灵动、仙气、自然、光斑、森林'],
+    ['难度系数', '★★☆（对光线和场景要求高）'],
+    ['拍摄时长', '约1.5-2小时'],
+    ['最佳天气', '晴天（需要阳光穿过树叶制造光斑）'],
+    ['最佳时间', '上午8:00-10:00 / 下午16:00-18:00（低角度阳光穿过树冠）'],
+    ['推荐地点（成都）', '青龙湖湿地公园、锦城湖公园、成都植物园、兴隆湖树林区'],
+    ['最佳季节/气候补充', '春夏最佳（绿叶茂密、野花遍地）；秋天落叶也有味道但颜色不同；阴天不适合拍森系——没有光斑就没有灵魂'],
+  ],
+  scenes: {
+    outdoor: { title: '户外（树林、花海、草地）', items: [
+      ['树林/林地', '青龙湖湿地公园树林区、成都植物园密林区', '上午8-10点', '晨光穿过树冠，光斑密集且柔和'],
+      ['花海/花丛', '锦城湖公园花田、三圣乡花市周边、石象湖', '上午9-11点', '花丛+远树，前景和背景都有层次'],
+      ['草地/草坪', '兴隆湖草坪、桂溪生态公园大草坪', '下午16-18点', '开阔草地+逆光，发丝光效果极佳'],
+      ['小溪/湖边', '青龙湖、锦城湖、浣花溪公园', '上午', '水边+树影+倒影，画面更有灵气'],
+    ]},
+    indoor: { title: '室内（植物温室、花房、阳光房）', items: [
+      ['植物温室', '成都植物园温室馆、三圣乡花卉市场温室区', '上午', '温室玻璃顶+植物，天然柔光箱'],
+      ['花房/花店', '三圣乡大型花店（有大面积绿植的）', '非高峰时段', '绿植环绕+窗光'],
+      ['阳光房民宿', 'Airbnb搜“阳光房”“绿植”“花园”', '全天', '大面积玻璃+室内绿植'],
+    ]}
+  },
+  outfit: [
+    ['连衣裙', '白色长裙（首选）/ 浅绿纱裙 / 碎花连衣裙', '白、浅绿、淡粉、碎花（小碎花）'],
+    ['上衣', '蕾丝/钩花衬衫 / 宽松棉麻衫', '白色、米色'],
+    ['下装', '棉麻长裙 / 纱裙', '白色、浅绿、卡其'],
+    ['鞋子', '平底绑带凉鞋 / 芭蕾平底鞋 / 藤编鞋', '浅色、裸色'],
+    ['配饰', '花环（干花/鲜花）、藤编包、细项链、手链', '自然材质为主'],
+  ],
+  outfitNote: '森系穿搭的灵魂是“轻”和“飘”——材质选纱、丝、棉麻等轻盈面料，裙子要有垂坠感和飘动感。颜色以白/米/浅绿/淡粉为主，避免深色和厚重的牛仔、皮革。花环是森系标志性道具，一两朵即可不要太满。',
+  props: [
+    ['花环（干花/鲜花）', '戴在头上、拿在手里、放在草地上', '网购干花花环¥30-60，或三圣乡现场买'],
+    ['透明纱巾/披帛', '搭在肩上、被风吹起、缠绕手臂', '网购¥20-40'],
+    ['一本书（封面自然系）', '坐在草地上看、放在膝上', '随便一本封面色调柔和的'],
+    ['小野花/花束', '手持、插在头发里、凑近闻', '现场摘（注意不要破坏景观）或自带'],
+    ['藤编包', '挎着、放在旁边', '网购¥40-80'],
+    ['泡泡瓶', '吹泡泡增加梦幻感', '网购¥15-25'],
+  ],
+  camSettings: [
+    ['拍摄模式', '<b>A档（光圈优先）</b>', '只管光圈，相机自动配快门'],
+    ['光圈', '<b>f/1.8 - f/2.8</b>', '大光圈制造光斑（树叶间隙的光点虚化效果）'],
+    ['快门', '自动匹配，确保 ≥ <b>1/200s</b>', '树林里风大，注意裙子/纱巾飘动导致的模糊'],
+    ['ISO', '先设 <b>100</b>，树林暗了到400-800', '树林里光比大，暗光区可能需要提ISO'],
+    ['白平衡', '手动设 <b>5000K</b>（晴天）/ <b>5200K</b>（阴天）', '见速查卡'],
+    ['白平衡偏移', '<b>B1, G2</b>', '见速查卡'],
+    ['照片风格', '<b>人像</b>', '见速查卡'],
+    ['曝光补偿', '<b>+0.3 至 +0.7 EV</b>', '森系需要明亮轻盈感，偏亮更仙'],
+  ],
+  camTip: '森系拍摄重点看光斑——对焦在人物眼睛上，背景树叶间的光点自然虚化成光斑。如果光斑不够明显，检查：1.太阳是否在树叶后方 2.光圈是否开到最大 3.背景树叶是否离人物足够远。',
+  poses: {
+    outdoor: { title: '户外版（树林/花海/草地）', items: [
+      ['“你往前走，手轻轻拂过路边的草/树叶，走到那棵大树下停住”', '跟拍（35mm），连拍抓手拂过植物的瞬间'],
+      ['“坐到草地上，把裙子铺开成圆形，低头看手里的花”', '俯拍（35mm），拍到铺开的裙摆+草地'],
+      ['“站在树下，仰头看透过树叶的光，闭眼睛，让光斑落在脸上”', '仰拍（35mm），树冠+光斑+人物侧脸'],
+      ['“转一圈，裙子飘起来，转完停下来看地面笑”', '平拍连拍（35mm），抓旋转+裙子飞扬'],
+      ['“蹲下来，凑近闻一朵花/摸一片叶子”', '侧面平拍（50mm），特写手和脸+植物'],
+      ['“背对着我，慢慢走向树林深处，走远一点”', '背影跟拍（50mm），纵深感+森林包裹感'],
+    ]},
+    indoor: { title: '室内版（温室/花房/阳光房）', items: [
+      ['“站在植物丛后面，只露出一半脸/一只眼睛”', '透过植物拍（50mm），前景虚化+人物'],
+      ['“坐到阳光房的藤椅上，手里拿着花环，低头编/整理”', '侧拍（50mm），阳光+植物环绕'],
+      ['“仰头，让天窗的光洒在脸上，闭眼”', '仰拍（35mm），逆光+柔和光效'],
+      ['“站到垂吊植物下面，伸手轻轻碰一片叶子”', '侧拍（50mm），植物+手+侧脸'],
+      ['“靠着玻璃墙/温室窗，外面是绿色植物，你在里面”', '正拍（50mm），玻璃反光+绿色背景'],
+      ['“把花环从头上拿下来，举在手里，透过花环看镜头”', '正拍（50mm），花环做画框'],
+    ]}
+  },
+  scripts: [
+    ['公园/树林', '“你好，我在练习拍森系风格的照片，刚才的光斑落在你身上特别美。可以帮你拍两张吗？拍完发给你。”'],
+    ['花海/花园', '“你好打扰了，我在做一组森林精灵感的人像练习，你和这片花/这个树林的氛围特别搭。愿意让我拍几张吗？”'],
+  ],
+  scriptTip: '在公园/树林拍森系，遇到穿白裙子的女生概率很高——她们本来就是冲着拍照去的。直接聊“我也在拍照”很容易建立共鸣。',
+  post: [
+    ['总体方向', '清冷、明亮、绿调、梦幻朦胧'],
+    ['色温', '<b>-5 至 0</b>（微微偏冷）'],
+    ['曝光', '<b>+0.3 至 +0.7</b>'],
+    ['对比度', '<b>-10 至 -20</b>'],
+    ['自然饱和度', '<b>+5 至 +10</b>'],
+    ['饱和度', '<b>0 至 -5</b>'],
+    ['绿色色相', '往翠绿拉一点'],
+    ['绿色饱和度', '降一点（避免绿得太假）'],
+    ['清晰度', '<b>-10 至 -15</b>'],
+    ['去朦胧', '<b>+5 至 +10</b>（增加梦幻柔光）'],
+  ],
+  postApp: 'VSCO 滤镜 <b>FP8</b>（柔光绿调）或 <b>E1</b>（奶油柔和），曝光+0.5，对比度−1，去朦胧+1。Lightroom搜“Forest Fairy”或“Woodland Portrait”预设。',
+  checklist: [
+    '相机 + 电池（充满，备电也带上） + SD卡（清空且有备用）',
+    '镜头（推荐35mm或50mm定焦；拍大场景带24-70mm变焦）',
+    '机内预设：白平衡偏移B1,G2 和照片风格“人像”已设好',
+    '道具：花环、透明纱巾、书、泡泡瓶、藤编包',
+    '查看天气（必须是晴天有阳光，阴天不适合）',
+    '提前一天发“给模特的文案”',
+    '防蚊液（树林必备，喷在衣服和皮肤上）',
+    '野餐布（草地上坐/躺用，隔离潮湿）',
+    '湿巾（草地上可能有泥土+露水）',
+    '防晒霜（树林里也有紫外线）',
+    '自己穿长裤和防滑鞋（树林里走路、蹲下方便）',
+  ]
+};
+
+/* ---------- I. 强闪光压暗背景 ---------- */
+/* ---------- I. 强闪光压暗背景 ---------- */
+STYLES['I'] = {
+  code: 'I', name: '强闪光压暗背景', subtitle: '硬朗酷炫的戏剧感',
+  copy: '“想拍一组像杂志内页一样有冲击力的照片——背景是城市的夜，脸上有一道利落的闪光把五官雕出来。你不用管镜头在哪，就酷酷地看向前面，手插口袋。这组照片拍的是你最飒、最不像‘平时自己’但内心可能一直想试试的样子。”',
+  preset: [
+    ['白平衡', '手动设 <b>5500K</b>（闪光灯色温）', '与外接闪光灯色温匹配'],
+    ['白平衡偏移', '<b>A1, G0</b>', '微暖，避免闪光灯把肤色打得太冷太白'],
+    ['照片风格', '<b>中性</b>', '保留明暗细节，后期调整空间大'],
+    ['— 强度 / 精细度 / 临界值', '<b>默认</b>', '保持出厂值'],
+    ['— 反差', '<b>0</b>', '闪光灯本身反差已够，不动'],
+    ['— 饱和度', '<b>-1</b>', '夜景颜色杂，降一档更干净'],
+    ['— 色调', '<b>0</b>', '保持自然肤色'],
+  ],
+  presetNote: '强闪光拍摄的核心不在机内预设，而在闪光灯设置。如果用热靴闪光灯（如Godox V860III），设M手动档1/8~1/4功率起步试拍。如果只用机顶闪，设闪光补偿+1至+2。',
+  summary: [
+    ['核心关键词', '闪光灯、硬朗、酷炫、戏剧感、压暗背景、夜景'],
+    ['难度系数', '★★★★（对闪光灯控制要求高，是所有风格中技术门槛最高的）'],
+    ['拍摄时长', '约1-1.5小时（夜间较冷，不宜太久）'],
+    ['最佳天气', '夜间（必需），晴朗或多云均可'],
+    ['最佳时间', '日落后30分钟到晚间（蓝调时刻+夜景灯光）'],
+    ['推荐地点（成都）', '太古里夜景、九眼桥、339电视塔附近、IFS天台、东郊记忆夜场'],
+    ['最佳季节/气候补充', '全年皆可；注意雾霾天夜景通透度差；冬天晚上冷注意模特保暖'],
+  ],
+  scenes: {
+    outdoor: { title: '户外（夜景街头、天台、暗巷）', items: [
+      ['商业街夜景', '太古里、春熙路（霓虹灯+广告牌+人流背景）', '日落后30分钟至21点', '霓虹灯和屏幕光做彩色背景，闪光打亮人物'],
+      ['桥/河边', '九眼桥、安顺廊桥（灯光+水面反光）', '日落后至20点', '桥灯+水面光斑做背景'],
+      ['天台/露台', 'IFS七楼露台、来福士天台（需确认开放时间）', '日落后', '城市天际线做背景+闪光人物'],
+      ['暗巷/背街', '太古里旁小街、镋钯街夜间', '晚间', '暗背景+单一街灯+闪光人物'],
+    ]},
+    indoor: { title: '室内（暗光场所、车库）', items: [
+      ['地下车库', 'IFS/太古里地下车库（找空旷区域）', '晚间人少时', '管灯/车灯做背景光源，闪光打人物'],
+      ['暗光酒吧/夜场', '需提前和店家沟通拍摄许可', '非高峰时段', '室内暗光+彩色氛围灯+闪光'],
+    ]}
+  },
+  outfit: [
+    ['上衣', '皮衣/皮夹克 / 深色修身西装 / 亮片/金属感上衣', '黑、银色、金属色、深红'],
+    ['下装', '紧身皮裤 / 黑色牛仔裤 / 短裙+丝袜', '黑色'],
+    ['鞋子', '高跟短靴 / 马丁靴 / 厚底鞋', '黑色、亮面'],
+    ['配饰', '金属项链/耳环（大件更出片）、墨镜（夜间戴也不违和）、皮带', '银色/金属光泽'],
+  ],
+  outfitNote: '闪光灯下，有光泽的面料最出片——皮革、亮片、金属线、缎面都会在闪光下产生好看的反光。纯哑光棉质在闪光下会显得平，可以用配饰的金属光泽弥补。全身深色（黑/深灰）是常规选择，但银色或金属色的单品会让闪光效果更惊艳。',
+  props: [
+    ['墨镜（造型款）', '戴着、推到头顶、拿在手里', '自己的或模特自带，夜间戴墨镜合理（就是酷）'],
+    ['金属链条/项链', '戴着、缠绕手指', '模特的或借'],
+    ['香烟/电子烟（模特接受的话）', '手持增加氛围', '尊重模特意愿，不强迫'],
+  ],
+  camSettings: [
+    ['拍摄模式', '<b>M档（手动曝光）</b>', '这是强闪光风格唯一推荐的模式——光圈控制闪光曝光，快门控制环境光'],
+    ['光圈', '<b>f/4 - f/8</b>', '收小光圈压暗环境光，闪光灯负责照亮人物'],
+    ['快门', '<b>1/160s - 1/250s</b>（R7闪光同步速度上限1/250s）', '低于同步速度，确保闪光覆盖整个画面'],
+    ['ISO', '<b>100-400</b>', '低ISO进一步压暗环境'],
+    ['白平衡', '<b>5500K</b>', '匹配闪光灯色温'],
+    ['白平衡偏移', '<b>A1, G0</b>', '见速查卡'],
+    ['照片风格', '<b>中性</b>', '见速查卡'],
+    ['曝光补偿', '<b>0 EV</b>（M档下通过光圈/快门/ISO直接控制）', 'M档不需要曝光补偿'],
+  ],
+  camTip: '强闪光的原理：用小光圈（f/5.6-f/8）+ 低ISO（100-200）+ 闪光同步快门（1/200s）把环境光压暗到接近黑，然后靠闪光灯把人物照亮。先不装闪光灯试拍一张——画面应该几乎全黑；再开闪光灯，人物就跳出来了。',
+  poses: {
+    outdoor: { title: '户外版（夜景街头/天台）', items: [
+      ['“站到灯箱/霓虹灯前面，双手插口袋，看镜头，不要笑”', '平拍（35mm或50mm），闪光正打，霓虹背景'],
+      ['“侧身对着我，一只手自然垂下去，回头看我，眼神锐一点”', '侧拍（50mm），闪光打侧脸，轮廓更立体'],
+      ['“背对镜头，站到天台栏杆旁，回头看——就一下，不用停”', '仰拍（35mm），闪光+城市夜景天际线'],
+      ['“蹲下/坐到台阶上，一只手搭膝盖上，另一只自然放，看地面”', '俯拍或平拍（35mm），闪光低角度打'],
+      ['“往前走，走到前面停下来，回头看，动作利落一点”', '跟拍（35mm），闪光+城市灯光混合'],
+      ['“戴上墨镜，对着镜头，嘴唇微张，气场拿出来”', '正拍（50mm），闪光+镜面反光'],
+    ]},
+    indoor: { title: '室内版（车库/暗光场所）', items: [
+      ['“靠墙站，一条腿弯曲脚踩墙上，双手插口袋”', '侧拍（35mm），闪光打侧面轮廓'],
+      ['“坐到车引擎盖/前台（如果允许），一只手撑在身后”', '仰拍（35mm），闪光+室内暗光'],
+      ['“走到两个管灯之间，让管灯在背后形成两条线”', '正拍（50mm），对称背景+闪光人物'],
+      ['“双手举起来，整理头发，手腕交叉在头顶”', '平拍（50mm），闪光打上半身特写'],
+      ['“背对镜头，回头——回头那一刻眼神要利落”', '平拍（50mm），闪光+回眸'],
+      ['“靠着金属栏杆/柱子，一只手抓住栏杆侧身探出来”', '侧拍（35mm），金属质感+闪光反光'],
+    ]}
+  },
+  scripts: [],
+  scriptTip: '',
+  post: [
+    ['总体方向', '高反差、冷硬、背景暗、人物亮'],
+    ['色温', '<b>0 至 +5</b>（微暖或中性）'],
+    ['曝光', '对人物曝光微调，背景保持暗'],
+    ['对比度', '<b>+10 至 +20</b>'],
+    ['高光', '保持皮肤高光不溢出'],
+    ['阴影', '<b>-20 至 -40</b>（把背景压到接近黑）'],
+    ['黑色色阶', '<b>-10 至 -20</b>'],
+    ['清晰度', '<b>+10 至 +20</b>'],
+    ['去朦胧', '<b>+5 至 +10</b>'],
+  ],
+  postApp: 'VSCO 滤镜 <b>Q5</b>（硬朗冷调）或 <b>G3</b>（高反差），对比度+1.5，颗粒+1。Lightroom搜“Flash Portrait”或“Editorial Night”预设。',
+  checklist: [
+    '相机 + 电池（充满，备电也带上，夜间冷电池耗电快） + SD卡（清空且有备用）',
+    '镜头（推荐35mm或50mm定焦 或 24-70mm变焦）',
+    '‼️ 闪光灯（机顶闪或热靴闪光灯，充满电/带备用电池）',
+    '机内预设：白平衡5500K 偏移A1,G0 照片风格“中性”已设好',
+    '道具：墨镜、金属配饰',
+    '查看天气（不下雨即可） + 确认天台/场地夜间是否开放',
+    '提前一天发“给模特的文案”',
+    '手电筒（辅助对焦用，暗光下相机可能对不上焦）',
+    '和朋友一起去（夜间拍摄安全第一，不独自带模特去偏僻处）',
+    '穿保暖外套给模特备着（拍完一组马上披上）',
+    '暖宝宝（冬天夜间拍摄必备）',
+    '提前踩点确认光线条件和安全状况',
+  ]
+};
+
+/* ---------- J. 美式街拍 ---------- */
+/* ---------- J. 美式街拍 ---------- */
+STYLES['J'] = {
+  code: 'J', name: '美式街拍', subtitle: '随性复古的潮流感',
+  copy: '“想拍一组像纽约SOHO街头杂志照一样的照片——随意但有态度，身上有牛仔的粗粝和涂鸦墙的张扬。你不用端，就靠在墙上喝可乐、蹲在路边看手机、走过斑马线。这组照片拍的是你骨子里那种‘爱谁谁’的随性。”',
+  preset: [
+    ['白平衡', '手动设 <b>5500K</b>（晴天）/ <b>5700K</b>（阴天）', '偏暖调，美式复古味'],
+    ['白平衡偏移', '<b>A2, M1</b>', '温暖复古肤色'],
+    ['照片风格', '<b>人像</b>', '肤色好看'],
+    ['— 强度 / 精细度 / 临界值', '<b>默认</b>', '保持出厂值'],
+    ['— 反差', '<b>-1</b>', '柔和一点，阳光硬时保护高光'],
+    ['— 饱和度', '<b>-1</b>', '美式复古不追求高饱和'],
+    ['— 色调', '<b>0</b>', '保持自然肤色'],
+  ],
+  presetNote: '美式街拍不像日系那么亮、不像胶片那么旧——它在两者之间：偏暖但不过头，柔和但有质感。色温5500K是黄金起点。',
+  summary: [
+    ['核心关键词', '随性、复古、潮流、街头、态度、美式'],
+    ['难度系数', '★★☆（对场景和穿搭要求中等）'],
+    ['拍摄时长', '约1.5-2小时'],
+    ['最佳天气', '晴天（阳光+阴影制造街头层次）'],
+    ['最佳时间', '下午14:00-17:00'],
+    ['推荐地点（成都）', 'U37创意仓库、东郊记忆红砖墙、IBOX爱盒子、太古里周边、万象城'],
+    ['最佳季节/气候补充', '春秋最佳（适合穿牛仔外套/卫衣等美式单品）；夏季太热穿搭受限；冬天羽绒服破坏美式风格线条'],
+  ],
+  scenes: {
+    outdoor: { title: '户外（红砖墙、涂鸦墙、街头）', items: [
+      ['红砖墙/旧厂房', 'U37创意仓库（红砖+涂鸦）、东郊记忆（红砖+工业风）', '下午14-16点', '红砖暖色调+阳光，美式底色'],
+      ['涂鸦墙/彩绘墙', 'IBOX爱盒子、东郊记忆涂鸦区', '下午14-17点', '涂鸦+人物，街头潮流感'],
+      ['街头/斑马线', '太古里周边街口、镋钯街路口', '下午（注意安全）', '街头动态+城市背景'],
+      ['篮球场/滑板场', '成都各大公园篮球场、新华公园滑板区', '下午', '运动设施+美式休闲感'],
+    ]},
+    indoor: { title: '室内（潮牌店、唱片店、美式餐厅）', items: [
+      ['潮牌买手店', '太古里潮牌店、COSMO（财富中心）', '非高峰时段', '设计感陈列+潮牌氛围'],
+      ['唱片店', '成都仅存的唱片店（需提前查找确认）', '下午', '黑胶唱片+复古海报'],
+      ['美式汉堡/披萨店', '各种美式餐厅（工业风装修的）', '非用餐高峰', '卡座+霓虹灯+美式装潢'],
+    ]}
+  },
+  outfit: [
+    ['上衣', '牛仔外套 / Oversized卫衣 / 印花T恤 / 格纹衬衫系在腰间', '牛仔蓝、白色、红色、黑色、灰色'],
+    ['下装', '直筒/宽松牛仔裤 / 工装裤 / 牛仔短裤', '浅蓝牛仔、卡其、军绿'],
+    ['鞋子', 'AJ / Dunk / 帆布鞋 / 马丁靴', '白色、黑红、彩色'],
+    ['配饰', '棒球帽（弯檐）、腰链、耳机（头戴式/挂脖）、帆布托特包', '街头感配饰'],
+  ],
+  outfitNote: '美式街拍的核心单品是牛仔——牛仔外套/牛仔裤至少有一件。加上棒球帽和帆布鞋/球鞋，就已经有80%的味道了。不要穿得“太精致”——美式是随性的、有粗粝感的，衣服不需要熨得笔挺。',
+  props: [
+    ['可乐/汽水罐', '手持、喝的动作、放在旁边', '便利店¥3-5，经典红罐可乐最上镜'],
+    ['棒球帽', '戴着、反戴、拿在手里', '模特自己带'],
+    ['耳机（头戴式/挂脖）', '戴着听歌、挂在脖子上', '自己的'],
+    ['滑板（如果模特会滑）', '抱着、踩在上面、真的滑', '模特自带或借'],
+    ['篮球', '拍球、抱着、坐在上面', '如果去篮球场拍'],
+  ],
+  camSettings: [
+    ['拍摄模式', '<b>A档（光圈优先）</b>', '只管光圈，相机自动配快门'],
+    ['光圈', '<b>f/1.8 - f/2.8</b>', '人物突出，背景虚化'],
+    ['快门', '自动匹配，确保 ≥ <b>1/250s</b>', '街头动态多，快门高一点'],
+    ['ISO', '先设 <b>100</b>，暗了往上加至400-800', '低ISO保持干净'],
+    ['白平衡', '手动设 <b>5500K</b>（晴天）/ <b>5700K</b>（阴天）', '见速查卡'],
+    ['白平衡偏移', '<b>A2, M1</b>', '见速查卡'],
+    ['照片风格', '<b>人像</b>', '见速查卡'],
+    ['曝光补偿', '<b>+0.3 至 +0.7 EV</b>', '偏亮更显活力'],
+  ],
+  camTip: '美式街拍的光线可以比日系“硬”一点——正午前后也能拍，阳光制造的强烈阴影反而有街头感。如果在红砖墙前拍，下午的低角度光会让砖墙纹理更立体。',
+  poses: {
+    outdoor: { title: '户外版（红砖墙/涂鸦墙/街头）', items: [
+      ['“靠着红砖墙/涂鸦墙，一只脚踩墙上，手搭膝盖上，拿罐可乐”', '平拍或侧拍（35mm），全身，拍到墙的质感'],
+      ['“蹲到路边，把滑板立起来，一只手扶着，看对面”', '低角度平拍（35mm），街角氛围'],
+      ['“过马路/过斑马线——正常走就行，我在对面拍”', '对面拍（50mm），注意安全，抓走姿'],
+      ['“把棒球帽摘下来，擦一下汗/扇一下风，再反扣戴回去”', '正拍或侧拍（50mm），半身，抓动作'],
+      ['“坐到台阶/路沿上，双臂撑在身后，腿伸直，歪头看镜头”', '低角度平拍（35mm），松弛街头感'],
+      ['“扔球/拍球的动作——不用真的接住，我做连拍”', '连拍（35mm），抓动作瞬间'],
+    ]},
+    indoor: { title: '室内版（潮牌店/唱片店/美式餐厅）', items: [
+      ['“在潮牌店挂衣架前，伸手拨开一排衣服，往里看”', '侧拍（35mm），衣服做前景'],
+      ['“坐在卡座里，喝一口可乐，喝之前停一下看瓶身”', '平拍（50mm），半身'],
+      ['“翻唱片/翻潮牌货架，低着头，拿起来看封面”', '侧拍或俯拍（50mm），手部动作+侧脸'],
+      ['“站在霓虹灯招牌下面，仰头看灯，侧面轮廓”', '仰拍（35mm），霓虹光+人物侧影'],
+      ['“戴上头戴耳机，闭眼听歌，身体跟着节奏晃一下”', '正拍（50mm），特写半身'],
+      ['“靠在柜台边，一只手撑着台面，看外面”', '侧拍（50mm），店铺玻璃+街景做背景'],
+    ]}
+  },
+  scripts: [
+    ['红砖墙/涂鸦区', '“Hey你好！我在练习拍美式街头风格的照片，你的穿搭很有态度，和这面墙特别搭。可以帮你拍两张吗？拍完发你！”'],
+    ['潮牌店/街头', '“不好意思打扰一下，我在做一组街头风格的人像练习，你今天的穿搭太对味了。愿意让我拍几张吗？”'],
+  ],
+  scriptTip: '美式街拍的搭讪语气可以更放松、更“街头”——用“Hey”开头比“你好”更符合风格调性。看到穿AJ/球鞋/牛仔的人，夸具体的单品比夸整体穿搭更有说服力。',
+  post: [
+    ['总体方向', '暖调、中对比、复古街头、有质感的随意'],
+    ['色温', '<b>+5 至 +10</b>'],
+    ['曝光', '<b>+0.3 至 +0.7</b>'],
+    ['对比度', '<b>-5 至 0</b>'],
+    ['自然饱和度', '<b>0 至 +5</b>'],
+    ['饱和度', '<b>-5 至 0</b>'],
+    ['高光', '加暖黄/橙'],
+    ['阴影', '加一点棕'],
+    ['清晰度', '<b>0 至 +5</b>'],
+  ],
+  postApp: 'VSCO 滤镜 <b>C1</b>（暖调活力）或 <b>KP1</b>（街头质感），曝光+0.5，对比度−1，颗粒+1。Lightroom搜“Street Style”或“Urban Portrait”预设。',
+  checklist: [
+    '相机 + 电池（充满，备电也带上） + SD卡（清空且有备用）',
+    '镜头（推荐35mm或50mm定焦 或 变焦24-70mm）',
+    '机内预设：白平衡偏移A2,M1 和照片风格“人像”已设好',
+    '道具：可乐罐、棒球帽、耳机、滑板（如需）',
+    '查看天气 + 确认涂鸦墙/红砖墙是否可自由拍摄',
+    '提前一天发“给模特的文案”',
+    '自己穿得街头一点（牛仔+球鞋），配合风格',
+    '注意拍摄时不要妨碍行人和交通',
+    '防晒霜（户外一下午）',
+    '随身带零钱买可乐（道具+口渴）',
+  ]
+};
+
+/* ---------- K. 大光圈糖水片 ---------- */
+/* ---------- K. 大光圈糖水片 ---------- */
+STYLES['K'] = {
+  code: 'K', name: '大光圈糖水片', subtitle: '甜美虚化的梦幻感',
+  copy: '“想拍一组甜到让人想恋爱的照片——背景都化成了彩色的光斑，只有你最清楚、最好看。你不用想POSE，就在花丛里走走转转，回头对我笑一下。这组照片不追求什么深刻，就是好看、甜美、让人看了心情好。”',
+  preset: [
+    ['白平衡', '手动设 <b>5300K</b>（晴天）/ <b>5500K</b>（阴天）', '微微偏暖，肤色白里透红'],
+    ['白平衡偏移', '<b>A1, M2</b>', '暖+洋红，强化甜美肤色'],
+    ['照片风格', '<b>人像</b>', '肤色平滑白皙'],
+    ['— 强度 / 精细度 / 临界值', '<b>默认</b>', '保持出厂值'],
+    ['— 反差', '<b>-2</b>', '最柔和的明暗过渡'],
+    ['— 饱和度', '<b>0</b>', '保持色彩鲜活'],
+    ['— 色调', '<b>-2</b>', '肤色偏粉嫩'],
+  ],
+  presetNote: '糖水片机内预设的核心是“甜”——肤色粉嫩、画面柔和。色调-2让肤色偏粉，M2偏移加强这种粉调。',
+  summary: [
+    ['核心关键词', '甜美、虚化、梦幻、光斑、少女、恋爱感'],
+    ['难度系数', '★☆☆（技术门槛最低，大光圈+好光线=成功80%）'],
+    ['拍摄时长', '约1-1.5小时'],
+    ['最佳天气', '晴天（需要充足光线制造光斑和眼神光）'],
+    ['最佳时间', '上午9:00-11:00 / 下午15:00-17:00'],
+    ['推荐地点（成都）', '漫花庄园、花舞人间、三圣乡花市、成都植物园、兴隆湖花田'],
+    ['最佳季节/气候补充', '春季最佳（各种花盛开+光线柔和）；夏季要避开正午（硬光+模特出汗）；秋季菊花/粉黛草也有花可拍'],
+  ],
+  scenes: {
+    outdoor: { title: '户外（花丛、花田、花园）', items: [
+      ['花海/花田', '漫花庄园、花舞人间、石象湖', '上午9-11点', '大面积花做背景虚化，光斑效果极好'],
+      ['花丛小径', '三圣乡花市周边、成都植物园花卉区', '下午15-17点', '花丛中+逆光，花瓣透光+人物发光'],
+      ['公园花坛', '人民公园、浣花溪公园', '上午9-11点', '就近取材，不跑远'],
+      ['树下花丛', '兴隆湖、青龙湖（有花+树的组合）', '下午', '树冠遮掉硬光+花丛做前景'],
+    ]},
+    indoor: { title: '室内（花房、甜品店、阳光房）', items: [
+      ['花房/花艺工作室', '三圣乡花艺工作室（可租用拍摄）', '上午', '花卉环绕+顶棚柔光'],
+      ['甜品店（粉色/白色调）', '太古里/IFS各种精致甜品店', '非高峰时段', '甜品+马卡龙色调的装修'],
+      ['阳光房', 'Airbnb搜“阳光房”“大落地窗”“花园”', '全天', '大面积窗光+室内花卉/绿植'],
+    ]}
+  },
+  outfit: [
+    ['连衣裙', '白色蕾丝裙 / 碎花裙 / 纱裙 / 吊带连衣裙', '白、浅粉、淡紫、浅蓝、碎花'],
+    ['上衣', '泡泡袖衬衫 / 针织开衫（浅色）', '白、奶油、浅粉'],
+    ['下装', '半身纱裙 / 百褶短裙', '浅色'],
+    ['鞋子', '玛丽珍鞋 / 芭蕾平底鞋 / 白色帆布鞋', '白色、浅粉'],
+    ['配饰', '蝴蝶结发饰/头箍、珍珠耳钉、细项链、蕾丝手套', '精致但不过分'],
+  ],
+  outfitNote: '糖水片的穿搭核心是“甜而不腻”——可以有很多女性化元素（蕾丝、纱、蝴蝶结），但不能全部堆上。选1-2个甜美元素就够了，比如蕾丝裙+简单配饰，或者纯色裙+蝴蝶结发饰。颜色以白/粉/奶油/浅紫为主。',
+  props: [
+    ['花束（鲜花/干花）', '手持、抱在怀里、举起来遮一半脸', '三圣乡现场买¥30-80，或自带'],
+    ['草帽/遮阳帽（浅色）', '戴着、拿在手里、挡脸', '网购¥30-50'],
+    ['泡泡瓶', '吹泡泡、对着泡泡笑', '网购¥15-25'],
+    ['透明伞（浅色边）', '撑着、转伞', '网购¥30'],
+    ['棉花糖/冰淇淋', '拿着吃、展示、喂镜头', '现场买'],
+  ],
+  camSettings: [
+    ['拍摄模式', '<b>A档（光圈优先）</b>', '光圈全开是糖水片的核心'],
+    ['光圈', '<b>f/1.4 - f/1.8</b>', '开最大！虚化是糖水片的灵魂'],
+    ['快门', '自动匹配，确保 ≥ <b>1/250s</b>', '阳光强时光圈全开可能快门飙到1/4000s，注意不要超上限'],
+    ['ISO', '<b>100</b>', '阳光下ISO100足够'],
+    ['白平衡', '手动设 <b>5300K</b>（晴天）/ <b>5500K</b>（阴天）', '见速查卡'],
+    ['白平衡偏移', '<b>A1, M2</b>', '见速查卡，甜美白里透红肤色'],
+    ['照片风格', '<b>人像</b>', '见速查卡'],
+    ['曝光补偿', '<b>+0.7 至 +1.0 EV</b>', '大胆过曝！高调画面是糖水片的标志'],
+  ],
+  camTip: '糖水片最怕“光斑不够圆”——要获得完美的圆形光斑，需要满足三个条件：1.光圈全开 2.背景有密集的点光源或反光点（树叶间隙、花瓣间隙、水面反光） 3.背景距离人物足够远。如果光斑是多边形，说明光圈没开够。',
+  poses: {
+    outdoor: { title: '户外版（花丛/花田/花园）', items: [
+      ['“站到花丛中间，转一圈，转完停下来低头看花笑”', '平拍连拍（35mm或50mm），花丛+裙子旋转'],
+      ['“拿着花束，低头轻轻闻，眼睛看花”', '侧拍（50mm），特写侧脸+花+手'],
+      ['“走到花田小径上，回头对我笑——多笑几次，我连拍”', '平拍（50mm），花田纵深感背景'],
+      ['“把草帽摘下来扇两下风，然后拿在手里看花田”', '侧拍（50mm），半身或全身'],
+      ['“举起花束，让花刚好挡住半张脸，从花后面看我”', '正拍（50mm），花做前景虚化'],
+      ['“坐着/蹲在花丛旁边，一只手轻轻碰花瓣，看花瓣”', '俯拍或平拍（35mm），花+手+侧脸'],
+    ]},
+    indoor: { title: '室内版（花房/甜品店/阳光房）', items: [
+      ['“坐窗前，捧着花束，低头看花，阳光从侧面打在花上和脸上”', '侧拍（50mm），窗光+花+人物'],
+      ['“双手捧脸，手肘撑在桌上，对着镜头甜笑”', '正拍（50mm），半身，最经典的糖水特写'],
+      ['“端起甜品/蛋糕，用叉子切一小块，递向镜头”', '正拍（50mm），甜品+手+脸'],
+      ['“对着镜子整理头发/蝴蝶结，我从镜子里拍你”', '利用镜面反射（35mm），双重画面'],
+      ['“把花环戴头上，戴到一半停住，手举在头顶”', '正拍（50mm），上半身，抓“正在戴”的动作'],
+      ['“靠着窗框，一只手拿花，闭眼微笑，阳光打轮廓光”', '侧拍（50mm），轮廓光+花束'],
+    ]}
+  },
+  scripts: [
+    ['花海/花田', '“你好！我在练习拍糖水片风格，你的裙子/穿搭和这片花田太配了，可以帮你拍两张吗？拍完发你！”'],
+    ['花园/公园', '“不好意思打扰啦，我在做一组甜美风格的人像练习，你站在花丛边的画面特别好看。愿意让我拍几张吗？”'],
+  ],
+  scriptTip: '糖水片的搭讪对象通常是自己也在拍照的女生——花田/花海里基本人人都在拍。可以先夸对方的穿搭（“你的裙子好好看，和花很配”）再问能不能帮你拍。女生帮女生拍最容易，男生拍的话需要更注意分寸。',
+  post: [
+    ['总体方向', '高调、柔和、粉嫩、甜美梦幻'],
+    ['色温', '<b>+5 至 +10</b>'],
+    ['曝光', '<b>+0.7 至 +1.3</b>'],
+    ['对比度', '<b>-15 至 -25</b>'],
+    ['自然饱和度', '<b>+5 至 +10</b>'],
+    ['饱和度', '<b>0 至 +5</b>'],
+    ['高光', '加粉/暖'],
+    ['阴影', '提亮（-20至-10）'],
+    ['清晰度', '<b>-10 至 -20</b>'],
+    ['去朦胧', '<b>+5 至 +10</b>（梦幻柔光）'],
+  ],
+  postApp: 'VSCO 滤镜 <b>S3</b>（粉嫩明亮）或 <b>AL3</b>（高调柔和），曝光+1，对比度−1，锐化−1。手机美颜相机“奶油”或“日系”滤镜直出也很适合糖水片。',
+  checklist: [
+    '相机 + 电池（充满，备电也带上） + SD卡（清空且有备用）',
+    '镜头（推荐50mm f/1.4或85mm f/1.8——糖水片需要最大光圈）',
+    '机内预设：白平衡偏移A1,M2 和照片风格“人像”色调-2已设好',
+    '道具：花束、草帽、泡泡瓶、透明伞',
+    '查看天气（必须是晴天）+ 确认花田花期/开放时间/门票',
+    '提前一天发“给模特的文案”',
+    '防晒霜（在花田没有遮挡，模特和你都需要）',
+    '湿巾（花田可能有土和花粉）',
+    '反光板（逆光拍时补面光，但不是必需）',
+    '自己穿方便蹲下、移动的衣服（花田里经常需要低角度）',
+  ]
+};
+
+/* ---------- O. 私房/情绪人像 ---------- */
+/* ---------- O. 私房/情绪人像 ---------- */
+STYLES['O'] = {
+  code: 'O', name: '私房/情绪人像', subtitle: '亲密真实的脆弱感',
+  copy: '“想拍一组像私密日记一样的照片——不用化妆，不用用力，就是你在卧室里最真实的样子。裹着被子发呆、靠着窗边想事情、窝在沙发里听歌。这组照片不追求好看，追求的是真实。拍的是你放松下来的、不必给任何人看的那个自己。”',
+  preset: [
+    ['白平衡', '手动设 <b>5000K</b>（窗光自然光）', '室内窗光通常偏冷，5000K还原自然肤色'],
+    ['白平衡偏移', '<b>A2, M1</b>', '暖调温柔，私房需要温暖的肤色'],
+    ['照片风格', '<b>人像</b>', '肤色柔和自然'],
+    ['— 强度 / 精细度 / 临界值', '<b>默认</b>', '保持出厂值'],
+    ['— 反差', '<b>-2</b>', '最柔和的明暗过渡，柔和就是温柔'],
+    ['— 饱和度', '<b>-1</b>', '低饱和让画面更安静'],
+    ['— 色调', '<b>0</b>', '保持自然肤色，不过度粉嫩'],
+  ],
+  presetNote: '私房拍摄的光线通常只有一扇窗——白平衡5000K是自然光起点，如果窗光实际偏冷可以提到5200K。A2,M1的偏移让暗光下的肤色也不显蜡黄。',
+  summary: [
+    ['核心关键词', '亲密、真实、脆弱、私密、放松、情绪'],
+    ['难度系数', '★★★（对信任关系和情绪引导要求高，对器材要求低）'],
+    ['拍摄时长', '约2-3小时（比外景多留时间给模特放松和情绪酝酿）'],
+    ['最佳天气', '不限（室内为主，窗光柔和即可；阴天窗光更柔和）'],
+    ['最佳时间', '上午9:00-11:00 / 下午14:00-17:00（窗光最好的时段）'],
+    ['推荐地点（成都）', 'Airbnb民宿（搜“采光好”“大落地窗”“简约”“拱形窗”）'],
+    ['最佳季节/气候补充', '全年皆可；冬季窗光角度低更柔和；夏季早晨窗光最好；阴天比晴天更合适（光线更均匀）'],
+  ],
+  scenes: {
+    outdoor: { title: '', items: [] },
+    indoor: { title: '室内（民宿、卧室、窗边）', items: [
+      ['卧室/床', '有白色床品的民宿最佳', '上午9-11点', '窗光打在被子和皮肤上，最柔和的漫射'],
+      ['窗边', '大落地窗或拱形窗的民宿', '下午14-17点', '逆光/侧逆光+纱帘柔光，轮廓光极美'],
+      ['沙发/角落', '有布艺沙发或地毯的角落', '全天', '蜷缩姿态+柔和环境光'],
+      ['浴室（如有自然光）', '有窗的浴室/洗手台区域', '上午', '镜子+水汽+自然光，独特氛围'],
+    ]}
+  },
+  outfit: [
+    ['基础', '白色/浅色吊带背心 / 宽松白衬衫 / 男友衬衫 / 针织开衫', '白、奶油、浅灰、燕麦色'],
+    ['下装', '棉质短裤 / 居家长裤 / 针织长袜（不穿鞋）', '浅色、棉质'],
+    ['可选（模特舒适度优先）', '蕾丝内衣（可外搭衬衫）/ 丝质睡裙 / 浴袍', '浅色、丝质、蕾丝'],
+    ['鞋子', '不穿鞋（或棉袜）', '赤脚或白色棉袜'],
+  ],
+  outfitNote: '私房拍摄最重要原则：模特的舒适度高于一切。从最保守的穿搭开始（白衬衫+棉质短裤），模特愿意再尝试其他搭配。不要一开始就建议内衣/裸露——让模特自己提出“要不要试一下那件”。材质选棉、丝、针织等亲肤面料。',
+  props: [
+    ['书/杂志', '靠在床上看、放在旁边', '随便一本'],
+    ['耳机', '听歌、闭眼、进入自己的世界', '自己的'],
+    ['一杯水/茶', '捧在手里、放在窗台', '现场倒'],
+    ['毯子/披肩', '裹着、搭在腿上', '民宿通常有'],
+    ['相机/拍立得（给模特）', '让她也拍，互动打破僵局', '你的备用机或道具机'],
+  ],
+  camSettings: [
+    ['拍摄模式', '<b>A档（光圈优先）</b>', '窗光环境光线变化不大，A档即可'],
+    ['光圈', '<b>f/1.8 - f/2.8</b>', '室内光弱，大光圈进光多+背景虚化'],
+    ['快门', '自动匹配，确保 ≥ <b>1/125s</b>', '室内窗光下快门可能降到1/100s左右，注意防抖'],
+    ['ISO', '从 <b>200</b> 开始，窗光不足可到800-1600', 'R7高感好，1600内画质可接受'],
+    ['白平衡', '手动设 <b>5000K</b>', '见速查卡，窗光基准'],
+    ['白平衡偏移', '<b>A2, M1</b>', '见速查卡'],
+    ['照片风格', '<b>人像</b>', '见速查卡'],
+    ['曝光补偿', '<b>+0.3 至 +0.7 EV</b>', '偏亮让皮肤更柔和，情绪氛围更暖'],
+  ],
+  camTip: '私房拍摄只有一个主光源（窗户）——模特的位置决定了光线质量。让模特离窗1-2米是黄金距离：光线足够亮但不至于反差太大。如果窗外光太硬，把纱帘拉上就是天然的柔光箱。',
+  poses: {
+    outdoor: { title: '', items: [] },
+    indoor: { title: '室内版（民宿/卧室/窗边）', items: [
+      ['“坐到窗边地上，膝盖弯起来，手臂轻轻抱着膝盖，看窗外”', '侧拍（50mm），窗光+人物轮廓'],
+      ['“趴到床上，脸枕在手臂上，闭眼，像在打瞌睡一样”', '平拍（35mm），拍到床品+人物的柔软感'],
+      ['“靠在床头/沙发角落里，毯子裹到肩膀，手抓着毯子边”', '平拍（50mm），半身，安全感姿态'],
+      ['“站到窗前，侧身，一只手搭在窗框上，让光描出你的轮廓”', '逆光侧拍（50mm），轮廓光+窗景'],
+      ['“坐床边，低头系扣子/整理衣角，手指动作放慢”', '侧拍或俯拍（50mm），特写手部+衣物'],
+      ['“裹着被子只露半张脸和一只眼睛，从被子里看我”', '正拍（50mm），被子包裹+眼神交流'],
+      ['“把耳机戴上，闭眼睛听歌，身体轻轻跟着晃”', '平拍（50mm），半身特写，入神的表情'],
+      ['“坐到镜子前面，对着镜子里的自己发呆，不用管我”', '利用镜子反射（35mm），双重画面+不同角度'],
+    ]}
+  },
+  scripts: [],
+  scriptTip: '',
+  post: [
+    ['总体方向', '暖调、柔和、低对比、安静、有温度的'],
+    ['色温', '<b>+5 至 +10</b>'],
+    ['曝光', '<b>+0.3 至 +0.7</b>'],
+    ['对比度', '<b>-15 至 -25</b>'],
+    ['自然饱和度', '<b>-5 至 0</b>'],
+    ['饱和度', '<b>-5 至 -10</b>'],
+    ['高光', '加暖黄/奶油'],
+    ['阴影', '提亮一点，不要死黑'],
+    ['清晰度', '<b>-10 至 -20</b>'],
+    ['颗粒', '<b>适量添加（10-20）</b>增加胶片般的私密感'],
+  ],
+  postApp: 'VSCO 滤镜 <b>M5</b>（柔暖褪色）或 <b>KU1</b>（温暖私密），曝光+0.5，对比度−1.5，颗粒+1。Lightroom搜“Intimate Portrait”或“Soft Warm”预设。手机醒图“法式”或“温柔”滤镜。',
+  checklist: [
+    '相机 + 电池（充满，备电也带上） + SD卡（清空且有备用）',
+    '镜头（推荐35mm和50mm定焦——35mm拍环境+人物，50mm拍特写）',
+    '机内预设：白平衡偏移A2,M1 和照片风格“人像”已设好',
+    '反光板（重要！窗光只有一面，反光板补阴影面，大幅提升出片率）',
+    '道具：书、耳机、茶/水、毯子',
+    '提前一天发“给模特的文案”+ 确认她Ok的穿搭范围',
+    '到达民宿后先不拍——聊聊天、放音乐、让模特先适应空间',
+    '放音乐（用手机放柔和的歌，安静、放松的氛围很重要）',
+    '带便携音响（比手机外放更好）',
+    '拍之前问清楚：哪些角度/穿搭/姿势让她不舒服——提前说好红线，拍的时候不越界',
+    '带吃的/喝的（2-3小时拍摄，中间要休息）',
+    '尊重第一——模特说“不”或表现出不自在，立刻停、换动作、不追问',
+  ]
+};
+
+/* ============================================================
+   渲染函数
+   ============================================================ */
+function renderStyle(style) {
+  const main = document.getElementById('mainContent');
+  if (!style || style.framework) {
+    return renderFramework(style, main);
+  }
+  let html = '';
+  // 头部
+  html += '<div class="style-header">';
+  html += '<div class="style-code">' + style.code + '. ' + style.name + '</div>';
+  html += '<h1>' + style.name + ' · ' + style.subtitle + '</h1>';
+  html += '</div>';
+
+  // 给模特的文案
+  html += '<div class="quote-block"><div class="quote-label">📱 给模特的文案（直接复制发给她）</div>' + style.copy + '</div>';
+
+  // 0. 机内预设速查卡
+  html += '<div class="card"><h2><span class="icon">⚙️</span>0. 佳能R7 · 机内预设速查卡（' + style.name + '专用）</h2>';
+  html += '<table><tr><th>设置项</th><th>推荐值</th><th>备注</th></tr>';
+  style.preset.forEach(function(row) {
+    html += '<tr><td>' + row[0] + '</td><td>' + row[1] + '</td><td>' + row[2] + '</td></tr>';
+  });
+  html += '</table>';
+  html += '<p style="margin-top:10px;font-size:0.82rem;color:var(--text-muted)">⚠️ ' + style.presetNote + '</p>';
+  html += '</div>';
+
+  // 1. 风格速查卡
+  html += '<div class="card"><h2><span class="icon">📋</span>1. 风格速查卡</h2>';
+  html += '<table>';
+  style.summary.forEach(function(row) {
+    html += '<tr><td style="width:140px;font-weight:600">' + row[0] + '</td><td>' + row[1] + '</td></tr>';
+  });
+  html += '</table></div>';
+
+  // 2. 拍摄场景 & 时间
+  html += '<div class="card"><h2><span class="icon">📍</span>2. 拍摄场景 & 时间</h2>';
+  ['outdoor','indoor'].forEach(function(key) {
+    var sec = style.scenes[key];
+    if (!sec) return;
+    html += '<h3 style="margin:14px 0 8px;font-size:0.95rem">🟢 ' + sec.title + '</h3>';
+    html += '<table><tr><th>场景</th><th>具体点位推荐</th><th>最佳时间</th><th>光线特点</th></tr>';
+    sec.items.forEach(function(item) {
+      html += '<tr><td>' + item[0] + '</td><td>' + item[1] + '</td><td>' + item[2] + '</td><td>' + item[3] + '</td></tr>';
+    });
+    html += '</table>';
+  });
+  html += '</div>';
+
+  // 3. 服装 & 道具
+  html += '<div class="card"><h2><span class="icon">👗</span>3. 服装 & 道具清单</h2>';
+  html += '<h3 style="margin-bottom:6px;font-size:0.9rem">👗 服装建议</h3>';
+  html += '<table><tr><th>单品</th><th>具体推荐</th><th>颜色/材质</th></tr>';
+  style.outfit.forEach(function(row) {
+    html += '<tr><td>' + row[0] + '</td><td>' + row[1] + '</td><td>' + row[2] + '</td></tr>';
+  });
+  html += '</table>';
+  html += '<p style="margin-top:8px;font-size:0.82rem;color:var(--text-muted)">⭐ 搭配原则：' + style.outfitNote + '</p>';
+  html += '<h3 style="margin:16px 0 6px;font-size:0.9rem">🎭 道具准备</h3>';
+  html += '<table><tr><th>道具</th><th>用途</th><th>获取方式</th></tr>';
+  style.props.forEach(function(row) {
+    html += '<tr><td>' + row[0] + '</td><td>' + row[1] + '</td><td>' + row[2] + '</td></tr>';
+  });
+  html += '</table></div>';
+
+  // 4. 相机参数
+  html += '<div class="card"><h2><span class="icon">📷</span>4. 相机参数（含机内预设）</h2>';
+  html += '<table><tr><th>设置项</th><th>数值</th><th>备注</th></tr>';
+  style.camSettings.forEach(function(row) {
+    html += '<tr><td>' + row[0] + '</td><td>' + row[1] + '</td><td>' + row[2] + '</td></tr>';
+  });
+  html += '</table>';
+  html += '<p style="margin-top:10px;font-size:0.82rem;color:var(--text-muted)">💡 ' + style.camTip + '</p>';
+  html += '</div>';
+
+  // 5. 摆姿引导卡
+  html += '<div class="card"><h2><span class="icon">🦸</span>5. 摆姿引导卡（照着念给她听）</h2>';
+  html += '<p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px">让她“做”而不是“演”，不要对着镜头硬笑。你念完就按连拍，抓中间最自然的帧。</p>';
+  ['outdoor','indoor'].forEach(function(key) {
+    var sec = style.poses[key];
+    if (!sec) return;
+    var emoji = key === 'outdoor' ? '🟢' : '🟡';
+    html += '<h3 style="margin:14px 0 8px;font-size:0.95rem">' + emoji + ' ' + sec.title + '</h3>';
+    html += '<ol class="guide-list" style="counter-reset:guide-counter">';
+    sec.items.forEach(function(item) {
+      html += '<li><div class="guide-content">' + item[0] + '<span class="guide-angle">📷 ' + item[1] + '</span></div></li>';
+    });
+    html += '</ol>';
+  });
+  html += '</div>';
+
+  // 6. 搭讪话术
+  if (style.scripts && style.scripts.length > 0) {
+    html += '<div class="card"><h2><span class="icon">🗣️</span>6. 搭讪话术（抓陌生人用）</h2>';
+    style.scripts.forEach(function(s) {
+      html += '<div class="script-card"><div class="script-scene">📍 ' + s[0] + '</div><p>' + s[1] + '</p></div>';
+    });
+    html += '<p style="margin-top:10px;font-size:0.82rem;color:var(--text-muted)">💡 ' + style.scriptTip + '</p>';
+    html += '</div>';
+  }
+
+  // 7. 后期方向
+  html += '<div class="card"><h2><span class="icon">🎨</span>7. 后期方向（一句话 + 关键滑动条）</h2>';
+  html += '<table><tr><th>调整项</th><th>方向</th></tr>';
+  style.post.forEach(function(row) {
+    html += '<tr><td>' + row[0] + '</td><td>' + row[1] + '</td></tr>';
+  });
+  html += '</table>';
+  html += '<p style="margin-top:10px;font-size:0.82rem;color:var(--text-muted)">📱 手机App推荐：' + style.postApp + '</p>';
+  html += '</div>';
+
+  // 8. 出门前检查清单
+  html += '<div class="card"><h2><span class="icon">✅</span>8. 出门前检查清单</h2>';
+  style.checklist.forEach(function(item, i) {
+    var id = 'check-' + style.code + '-' + i;
+    html += '<label class="checklist-item" data-check-id="' + id + '">';
+    html += '<input type="checkbox" id="' + id + '">';
+    html += '<span class="checklist-text">' + item + '</span>';
+    html += '</label>';
+  });
+  html += '</div>';
+
+  main.innerHTML = html;
+  restoreChecklist();
+}
+
+function renderFramework(style, main) {
+  var name = style ? style.name : '';
+  var subtitle = style ? style.subtitle : '';
+  var code = style ? style.code : '';
+  var accent = style ? '' : '';
+  var comingSoonText = style ? '详细内容正在赶工中，敬请期待…' : '';
+  var desc = subtitle ? ('“' + subtitle + '”') : '';
+
+  main.innerHTML = ''
+    + '<div class="style-header">'
+    + '<div class="style-code">' + code + '. ' + name + '</div>'
+    + '<h1>' + name + ' · ' + subtitle + '</h1>'
+    + '</div>'
+    + '<div class="framework-card">'
+    + '<div class="coming-soon">🛒</div>'
+    + '<h2>' + name + '</h2>'
+    + '<p style="font-size:1.05rem;margin-bottom:6px">' + desc + '</p>'
+    + '<p>' + comingSoonText + '</p>'
+    + '</div>';
+}
+
+/* ============================================================
+   检查清单 localStorage
+   ============================================================ */
+function restoreChecklist() {
+  var items = document.querySelectorAll('.checklist-item');
+  items.forEach(function(item) {
+    var id = item.getAttribute('data-check-id');
+    var checked = localStorage.getItem(id) === 'true';
+    var cb = item.querySelector('input[type="checkbox"]');
+    if (cb) cb.checked = checked;
+    if (checked) item.classList.add('checked');
+    else item.classList.remove('checked');
+  });
+}
+
+document.addEventListener('change', function(e) {
+  if (e.target.type === 'checkbox' && e.target.id && e.target.id.indexOf('check-') === 0) {
+    var id = e.target.id;
+    localStorage.setItem(id, e.target.checked ? 'true' : 'false');
+    var label = e.target.closest('.checklist-item');
+    if (label) {
+      if (e.target.checked) label.classList.add('checked');
+      else label.classList.remove('checked');
+    }
+  }
+});
+
+/* ============================================================
+   导航 & 侧栏
+   ============================================================ */
+var currentStyle = 'A';
+var sidebar = document.getElementById('sidebar');
+var main = document.getElementById('mainContent');
+var floatToggle = document.getElementById('floatToggle');
+var sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
+
+function switchStyle(code) {
+  currentStyle = code;
+  document.body.setAttribute('data-style', code);
+  // 更新导航高亮
+  document.querySelectorAll('.nav-item').forEach(function(el) {
+    el.classList.toggle('active', el.getAttribute('data-style') === code);
+  });
+  // 渲染
+  renderStyle(STYLES[code]);
+  // 滚动到顶部
+  main.scrollTop = 0;
+  window.scrollTo(0, 0);
+  // 移动端关闭侧栏
+  if (window.innerWidth <= 768) {
+    sidebar.classList.remove('open');
+  }
+}
+
+// 导航项点击
+document.querySelectorAll('.nav-item').forEach(function(el) {
+  el.addEventListener('click', function() {
+    switchStyle(this.getAttribute('data-style'));
+  });
+});
+
+// 侧栏收纳/展开
+function toggleSidebar() {
+  if (window.innerWidth <= 768) {
+    sidebar.classList.toggle('open');
+  } else {
+    sidebar.classList.toggle('collapsed');
+    if (sidebar.classList.contains('collapsed')) {
+      main.classList.add('expanded');
+    } else {
+      main.classList.remove('expanded');
+    }
+  }
+}
+
+sidebarCloseBtn.addEventListener('click', function(e) {
+  e.stopPropagation();
+  toggleSidebar();
+});
+
+floatToggle.addEventListener('click', function() {
+  toggleSidebar();
+});
+
+// ============================================================
+// 快速索引弹窗
+// ============================================================
+var modalOverlay = document.getElementById('modalOverlay');
+var modalClose = document.getElementById('modalClose');
+var quickIndexBtn = document.getElementById('quickIndexBtn');
+
+quickIndexBtn.addEventListener('click', function() {
+  modalOverlay.classList.add('show');
+});
+
+modalClose.addEventListener('click', function() {
+  modalOverlay.classList.remove('show');
+});
+
+modalOverlay.addEventListener('click', function(e) {
+  if (e.target === modalOverlay) {
+    modalOverlay.classList.remove('show');
+  }
+});
+
+// Tab 切换
+document.querySelectorAll('.modal-tab').forEach(function(tab) {
+  tab.addEventListener('click', function() {
+    var targetId = this.getAttribute('data-tab');
+    document.querySelectorAll('.modal-tab').forEach(function(t) { t.classList.remove('active'); });
+    this.classList.add('active');
+    document.querySelectorAll('.modal-tab-content').forEach(function(c) { c.classList.remove('active'); });
+    document.getElementById(targetId).classList.add('active');
+  });
+});
+
+// 索引里的风格链接点击
+document.querySelectorAll('.index-table .style-link').forEach(function(link) {
+  link.addEventListener('click', function() {
+    var code = this.getAttribute('data-style');
+    if (code) {
+      switchStyle(code);
+      modalOverlay.classList.remove('show');
+    }
+  });
+});
+
+// ESC 关闭弹窗
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && modalOverlay.classList.contains('show')) {
+    modalOverlay.classList.remove('show');
+  }
+});
+
+// ============================================================
+// 初始化
+// ============================================================
+renderStyle(STYLES['A']);
+
+// 移动端默认收起侧栏
+if (window.innerWidth <= 768) {
+  sidebar.classList.remove('open');
+}
+
+// 窗口大小变化时重置侧栏状态
+var resizeTimer;
+window.addEventListener('resize', function() {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(function() {
+    if (window.innerWidth <= 768) {
+      sidebar.classList.remove('collapsed');
+      main.classList.remove('expanded');
+    }
+  }, 150);
+});
+</script>
+</body>
+</html>
